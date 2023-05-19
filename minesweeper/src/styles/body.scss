@@ -1,0 +1,13 @@
+@import '/src/styles/vars.scss';
+
+.page {
+  background: url('/src/images/background.jpg');
+  font-family: 'Changa One';
+  background-size: cover;
+  position: relative;
+  color: $color1;
+  text-shadow: 2px 2px 2px black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
