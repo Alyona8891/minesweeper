@@ -10,7 +10,10 @@
     height: 30px;
     width: 170px;
     transition: 0.3s;
-    &:hover {
+    &:disabled {
+        cursor: no-drop;
+    }
+    &:not([disabled]):hover {
     scale: 1.05;
     transition: 0.3s;
    }

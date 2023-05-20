@@ -83,5 +83,13 @@
 }
 
 .options__button_purple {
-  background: linear-gradient(180deg,  rgb(148, 40, 219), rgb(204, 167, 221));
+  background: linear-gradient(180deg,  rgb(148, 40, 219), rgb(218, 195, 233));
+}
+
+.options__button_rose {
+  background: linear-gradient(180deg,  rgb(219, 40, 180),  rgb(236, 178, 224));
+}
+
+.options__button_blue {
+  background: linear-gradient(180deg,  rgb(40, 103, 219),   rgb(180, 189, 206));
 }

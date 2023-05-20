@@ -1,0 +1,29 @@
+@import '/src/styles/vars.scss';
+
+.input-block {
+  display: flex;
+  align-items: center;
+}
+
+.input-block__label {
+  background: linear-gradient(180deg,  $color3 10%, $color2 80%, $color3); 
+  height: 40px;
+  margin-left: 40px;
+  margin-bottom: 5px;
+  width: 100px;
+  border-radius: 5px;
+  justify-content: space-around;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-block__marker {
+  cursor: pointer;
+ accent-color: yellow;
+}
+
+.input-block__info {
+ font-size: 12px;
+}
