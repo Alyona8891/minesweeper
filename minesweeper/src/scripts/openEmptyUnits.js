@@ -2,11 +2,12 @@ export function openEmptyUnits(board, row, col) {
   if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
     return;
   }
-  if (board[row][col].isOpened || board[row][col].isFlagged || board[row][col].isBomb)
+  if (board[row][col].isOpened || board[row][col].isBomb)
   {
     return;
   }
   board[row][col].isOpened = true;
+  board[row][col].isFlagged = true;
   const units = document.querySelectorAll('.game-board__unit');
   for (let i = 0; i < units.length; i++) {
     let row1 = parseInt(units[i].dataset.row);
@@ -14,6 +15,7 @@ export function openEmptyUnits(board, row, col) {
     if(row1 === row && col1 === col) {
       units[i].innerText = board[row][col].bombsAround;
       units[i].classList.add('game-board__unit_opened');
+      units[i].classList.remove('game-board__unit_flagged');
       if(board[row][col].bombsAround === 0) {
        units[i].classList.add('game-board__unit_opened-null');
      }
