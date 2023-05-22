@@ -12,6 +12,7 @@ import { unitClickSound } from './scripts/soundClickUnit';
 import { unitFlagSound } from './scripts/soundContextUnit';
 import { winnerSound } from './scripts/soundWinner';
 import { overSound } from './scripts/soundGameOver';
+//import { startTimer } from './scripts/startTimer';
 
 vars.body.classList.add('page');
 createElement('header', vars.body, '', 'page__header-page', 'header-page');
@@ -71,7 +72,9 @@ createElement('button', optionsInfoBlocks, 'settingsBtn','options__button', 'opt
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_purple', 'button');
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_rose', 'button');
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_blue', 'button');
-nameButtons(['Game Mode', 'Settings', 'Score', 'Save Game', 'New Game'], '.options__button')
+nameButtons(['Game Mode', 'Settings', 'Score', 'Save Game', 'New Game'], '.options__button');
+const timerBlock = document.querySelector('#time');
+timerBlock.innerHTML = '00:00'
 
 /*----game-board-----*/
 
@@ -82,7 +85,23 @@ let board = createArrBoard(10, 10, 10);
 createGameBoard(board, gameBoard);
 
 let clicksCounter = 0;
+let seconds = 0;
+let minutes = 0;
+let timer;
 
+function startTimer() {
+  seconds++;
+  if (seconds == 60) {
+    seconds = 0;
+    minutes++;
+  }
+  document.getElementById("time").innerHTML = (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+  timer = setTimeout(startTimer, 1000);
+}
+
+function clearTimer() {
+  clearTimeout(timer);
+}
 let units = document.querySelectorAll('.game-board__unit');
 function createListenersUnits() {
   
@@ -98,6 +117,9 @@ function createListenersUnits() {
         board = createArrBoard(10, 10, 10);
         clicksCounter = 0;
       } 
+      if(clicksCounter === 0) {
+        startTimer();
+      } 
       if (board[row][col].isBomb && clicksCounter !== 0) {
         if(theme === 'light') {
           this.classList.add('game-board__unit_over');
@@ -107,6 +129,7 @@ function createListenersUnits() {
         clicksCounter += 1;
         counterClicksEl.innerText =  clicksCounter;
         overSound.play();
+        clearTimeout(timer);
       } else {
         if(theme === 'light') {
           this.classList.add('game-board__unit_opened');
@@ -146,6 +169,7 @@ function createListenersUnits() {
         openEmptyUnits(theme, board, row, col);
         if (controlWin(board)) {
           winnerSound.play();
+          clearTimeout(timer);
         }
       }
     });
@@ -164,8 +188,10 @@ function createListenersUnits() {
         if (+(counterMines.innerText) === 0) {
           if (controlWin(board)) {
             winnerSound.play();
+            clearTimeout(timer);
           } else {
             overSound.play();
+            clearTimeout(timer);
           }
         }
         if(theme === 'light') {
@@ -323,6 +349,10 @@ startGameBtn.addEventListener('click', () => {
     optionsTitle.innerText = 'Hard 25x25';
   }
   counterMines.innerText = inputMines.value;
+  clearTimeout(timer);
+  timerBlock.innerHTML = '00:00';
+  seconds = 0;
+  minutes = 0;
 })
 /*-------setting-----*/
 createElement('div', mainPage, 'settingsWindow', 'main-page__settings-window', 'settings-block', 'settings-block_closed');
