@@ -1,4 +1,4 @@
-export function openEmptyUnits(board, row, col) {
+export function openEmptyUnits(theme, board, row, col) {
   if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
     return;
   }
@@ -14,8 +14,14 @@ export function openEmptyUnits(board, row, col) {
     let col1 = parseInt(units[i].dataset.col);
     if(row1 === row && col1 === col) {
       units[i].innerText = board[row][col].bombsAround;
-      units[i].classList.add('game-board__unit_opened');
-      units[i].classList.remove('game-board__unit_flagged');
+      if(theme === 'light') {
+        units[i].classList.add('game-board__unit_opened');
+        units[i].classList.remove('game-board__unit_flagged');
+      } else {
+        units[i].classList.add('game-board__unit_opened-dark');
+        units[i].classList.remove('game-board__unit_flagged-dark');
+      }
+
       if(board[row][col].bombsAround === 0) {
        units[i].classList.add('game-board__unit_opened-null');
      }
@@ -46,13 +52,13 @@ export function openEmptyUnits(board, row, col) {
     }
   }
   if (board[row][col].bombsAround === 0) {
-    openEmptyUnits(board, row - 1, col - 1);
-    openEmptyUnits(board, row - 1, col);
-    openEmptyUnits(board, row - 1, col + 1);
-    openEmptyUnits(board, row, col - 1);
-    openEmptyUnits(board, row, col + 1);
-    openEmptyUnits(board, row + 1, col - 1);
-    openEmptyUnits(board, row + 1, col);
-    openEmptyUnits(board, row + 1, col + 1);
+    openEmptyUnits(theme, board, row - 1, col - 1);
+    openEmptyUnits(theme, board, row - 1, col);
+    openEmptyUnits(theme, board, row - 1, col + 1);
+    openEmptyUnits(theme, board, row, col - 1);
+    openEmptyUnits(theme, board, row, col + 1);
+    openEmptyUnits(theme, board, row + 1, col - 1);
+    openEmptyUnits(theme, board, row + 1, col);
+    openEmptyUnits(theme, board, row + 1, col + 1);
   }
 }

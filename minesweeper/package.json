@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "node_modules/.bin/webpack --progress",
-    "start": "node_modules/.bin/webpack-dev-server"
+    "start": "node_modules/.bin/webpack-dev-server",
+    "deploy": "node_modules/.bin/webpack --progress && node_modules/.bin/gh-pages -d dist -e minesweeper"
   },
   "dependencies": {
     "css-loader": "^6.7.3",
@@ -20,6 +21,8 @@
     "webpack-dev-server": "^4.15.0"
   },
   "devDependencies": {
+    "file-loader": "^6.2.0",
+    "gh-pages": "^5.0.0",
     "mini-css-extract-plugin": "^2.7.5"
   }
 }

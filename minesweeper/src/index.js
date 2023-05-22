@@ -8,6 +8,11 @@ import { openEmptyUnits } from './scripts/openEmptyUnits';
 import { controlWin } from './scripts/controlWin';
 import { createRadioBlock } from './scripts/createRadioBlock';
 
+import { unitClickSound } from './scripts/soundClickUnit';
+import { unitFlagSound } from './scripts/soundContextUnit';
+import { winnerSound } from './scripts/soundWinner';
+import { overSound } from './scripts/soundGameOver';
+
 vars.body.classList.add('page');
 createElement('header', vars.body, '', 'page__header-page', 'header-page');
 createElement('main', vars.body, '', 'main__main-page', 'main-page');
@@ -80,14 +85,13 @@ let clicksCounter = 0;
 
 let units = document.querySelectorAll('.game-board__unit');
 function createListenersUnits() {
+  
   for (let i = 0; i < units.length; i++) {
-    const btnClickSound = new Audio();
-      btnClickSound.src = './minesweeper/src/sounds/click.mp3';
-      btnClickSound.volume = 0.05;
+    
     const counterClicksEl = document.querySelector('#counterClicks');
     counterClicksEl.innerText =  clicksCounter;
     units[i].addEventListener('click', function() {
-      btnClickSound.play();
+      unitClickSound.play();
       let row = parseInt(this.dataset.row);
       let col = parseInt(this.dataset.col);
       if(clicksCounter === 0 && board[row][col].isBomb) {
@@ -95,12 +99,20 @@ function createListenersUnits() {
         clicksCounter = 0;
       } 
       if (board[row][col].isBomb && clicksCounter !== 0) {
-        this.classList.add('game-board__unit_over');
+        if(theme === 'light') {
+          this.classList.add('game-board__unit_over');
+        } else {
+          this.classList.add('game-board__unit_over-dark');
+        }
         clicksCounter += 1;
         counterClicksEl.innerText =  clicksCounter;
-        alert('Вы проиграли!');
+        overSound.play();
       } else {
-        this.classList.add('game-board__unit_opened');
+        if(theme === 'light') {
+          this.classList.add('game-board__unit_opened');
+        } else {
+          this.classList.add('game-board__unit_opened-dark');
+        }
         this.innerText = board[row][col].bombsAround;
         if(board[row][col].bombsAround === 0) {
           this.classList.add('game-board__unit_opened-null');
@@ -131,30 +143,37 @@ function createListenersUnits() {
         }
         clicksCounter += 1;
         counterClicksEl.innerText =  clicksCounter;
-        openEmptyUnits(board, row, col);
+        openEmptyUnits(theme, board, row, col);
         if (controlWin(board)) {
-          alert('Вы выиграли!');
+          winnerSound.play();
         }
       }
     });
     units[i].addEventListener('contextmenu', function(event) {
+      unitFlagSound.play();
       event.preventDefault();
       let row = parseInt(this.dataset.row);
       let col = parseInt(this.dataset.col);
       if (!board[row][col].isOpened) {
         board[row][col].isFlagged = !board[row][col].isFlagged;
-        if(+(counterMines.innerText) > 0) {
+        if(+(counterMines.innerText) > 0 && board[row][col].isFlagged === true) {
           counterMines.innerText = +(counterMines.innerText) - 1;
-        } 
+        } else if (+(counterMines.innerText) > 0 && board[row][col].isFlagged === false) {
+          counterMines.innerText = +(counterMines.innerText) + 1;
+        }
         if (+(counterMines.innerText) === 0) {
           if (controlWin(board)) {
-            alert('Вы выиграли!');
+            winnerSound.play();
           } else {
-            alert('Вы проиграли!')
+            overSound.play();
           }
         }
+        if(theme === 'light') {
+          this.classList.toggle('game-board__unit_flagged');
+        } else {
+          this.classList.toggle('game-board__unit_flagged-dark');
+        }
         
-        this.classList.toggle('game-board__unit_flagged');
       }
 
     });
@@ -282,6 +301,7 @@ startGameBtn.addEventListener('click', () => {
     clicksCounter = 0;
     units = document.querySelectorAll('.game-board__unit');
     createListenersUnits();
+    correctTheme();
     optionsTitle.innerText = 'Easy 10x10';
   } else if(markerMedium.checked) {
     board = createArrBoard(16, 16, inputMines.value);
@@ -290,6 +310,7 @@ startGameBtn.addEventListener('click', () => {
     units = document.querySelectorAll('.game-board__unit');
     clicksCounter = 0;
     createListenersUnits();
+    correctTheme();
     optionsTitle.innerText = 'Medium 16x16';
   } else if(markerHard.checked) {
     board = createArrBoard(25, 25, inputMines.value);
@@ -298,6 +319,7 @@ startGameBtn.addEventListener('click', () => {
     units = document.querySelectorAll('.game-board__unit');
     clicksCounter = 0;
     createListenersUnits();
+    correctTheme();
     optionsTitle.innerText = 'Hard 25x25';
   }
   counterMines.innerText = inputMines.value;
@@ -339,10 +361,9 @@ createElement('button', innerSettingsContainer, 'conformBtn', 'settings__button'
 const markerSoundOn = document.querySelector('#soundOn');
 const markerSoundOf = document.querySelector('#soundOff');
 markerSoundOn.checked = true;
-const conformBtn = document.querySelector('#conformBtn');
-conformBtn.innerText = 'Conform';
 
-nameButtons(['Settings', 'Themes', 'Sound On'], '.settings-block__subtitle');
+
+nameButtons(['Settings', 'Themes', 'Sound'], '.settings-block__subtitle');
 
 const settingsBtn = document.querySelector('#settingsBtn');
 settingsBtn.addEventListener('click', (e) => {
@@ -358,3 +379,120 @@ settingsCloseBtns.addEventListener('click', () => {
   settingsWindow.classList.toggle('settings-block_closed');
   vars.body.removeChild(backdrop);
 })
+
+const conformBtn = document.querySelector('#conformBtn');
+conformBtn.innerText = 'Conform';
+
+conformBtn.addEventListener('click', () => {
+  settingsWindow.classList.toggle('settings-block_opened');
+  settingsWindow.classList.toggle('settings-block_closed');
+  vars.body.removeChild(backdrop);
+  if(soundOn.checked === true) {
+    unitClickSound.volume = 0.5;
+    unitFlagSound.volume = 0.5;
+    winnerSound.volume = 0.5;
+    overSound.volume = 0.5;
+  } else {
+    unitClickSound.volume = 0;
+    unitFlagSound.volume = 0;
+    winnerSound.volume = 0;
+    overSound.volume = 0;
+  }
+  changeTheme();
+})
+
+soundOn.addEventListener('input', () => {
+  soundOff.checked = false;
+  soundOn.checked = true;
+})
+
+soundOff.addEventListener('input', () => {
+  soundOff.checked = true;
+  soundOn.checked = false;
+})
+
+let theme = 'light';
+themesLightBtn.addEventListener('click', () => {
+  themesDarkBtn.classList.remove('themes-block__theme_chosen');
+  themesLightBtn.classList.add('themes-block__theme_chosen');
+});
+
+themesDarkBtn.addEventListener('click', () => {
+  themesLightBtn.classList.remove('themes-block__theme_chosen');
+  themesDarkBtn.classList.add('themes-block__theme_chosen');
+})
+function addLightTheme() {
+  const buttons = document.querySelectorAll('.button');
+  buttons.forEach(el => el.classList.remove('button_dark'));
+  const gameBoardUnits = document.querySelectorAll('.game-board__unit');
+  gameBoardUnits.forEach(el => el.classList.remove('game-board__unit_dark'));
+  const gameBoardUnitsOpend = document.querySelectorAll('.game-board__unit_opened');
+  gameBoardUnitsOpend.forEach(el => el.classList.remove('game-board__unit_opened-dark'));
+  const gameBoardUnitsFlagged = document.querySelectorAll('.game-board__unit_flagged');
+  gameBoardUnitsFlagged.forEach(el => el.classList.remove('game-board__unit_flagged-dark'));
+  const gameBoardUnitsOver = document.querySelectorAll('.game-board__unit_over');
+  gameBoardUnitsOver.forEach(el => el.classList.remove('game-board__unit_over-dark'));
+  vars.body.classList.remove('page_dark');
+  const optionsTitleBlock = document.querySelectorAll('.options__title-block');
+  optionsTitleBlock.forEach(el => el.classList.remove('options__title-block_dark'));
+  const optionsTitle = document.querySelectorAll('.options__title');
+  optionsTitle.forEach(el => el.classList.remove('options__title_dark'));
+  const optionsInfoBlocksContainer = document.querySelectorAll('.options__info-blocks-container');
+  optionsInfoBlocksContainer.forEach(el => el.classList.remove('options__info-blocks-container_dark'));
+  const windowBlockInnerContainer = document.querySelectorAll('.window-block__inner-container');
+  windowBlockInnerContainer.forEach(el => el.classList.remove('window-block__inner-container_dark'));
+  const windowBlockOpened = document.querySelector('#gameModeWindow');
+  windowBlockOpened.classList.remove('window-block_opened-dark');
+  const settingsWindow = document.querySelector('#settingsWindow');
+  settingsWindow.classList.remove('settings-block_opened-dark');
+  const settingsBlockInnerContainer = document.querySelectorAll('.settings-block__inner-container');
+  settingsBlockInnerContainer.forEach(el => el.classList.remove('settings-block__inner-container_dark'));
+}
+
+function addDarkTheme() {
+  const buttons = document.querySelectorAll('.button');
+  buttons.forEach(el => el.classList.add('button_dark'));
+  const gameBoardUnits = document.querySelectorAll('.game-board__unit');
+  gameBoardUnits.forEach(el => el.classList.add('game-board__unit_dark'));
+  const gameBoardUnitsOpend = document.querySelectorAll('.game-board__unit_opened');
+  gameBoardUnitsOpend.forEach(el => el.classList.add('game-board__unit_opened-dark'));
+  const gameBoardUnitsFlagged = document.querySelectorAll('.game-board__unit_flagged');
+  gameBoardUnitsFlagged.forEach(el => el.classList.add('game-board__unit_flagged-dark'));
+  const gameBoardUnitsOver = document.querySelectorAll('.game-board__unit_over');
+  gameBoardUnitsOver.forEach(el => el.classList.add('game-board__unit_over-dark'));
+  vars.body.classList.add('page_dark');
+  const optionsTitleBlock = document.querySelectorAll('.options__title-block');
+  optionsTitleBlock.forEach(el => el.classList.add('options__title-block_dark'));
+  const optionsTitle = document.querySelectorAll('.options__title');
+  optionsTitle.forEach(el => el.classList.add('options__title_dark'));
+  const optionsInfoBlocksContainer = document.querySelectorAll('.options__info-blocks-container');
+  optionsInfoBlocksContainer.forEach(el => el.classList.add('options__info-blocks-container_dark'));
+  const windowBlockInnerContainer = document.querySelectorAll('.window-block__inner-container');
+  windowBlockInnerContainer.forEach(el => el.classList.add('window-block__inner-container_dark'));
+  const windowBlockOpened = document.querySelector('#gameModeWindow');
+  windowBlockOpened.classList.add('window-block_opened-dark');
+  const settingsWindow = document.querySelector('#settingsWindow');
+  settingsWindow.classList.add('settings-block_opened-dark');
+  const settingsBlockInnerContainer = document.querySelectorAll('.settings-block__inner-container');
+  settingsBlockInnerContainer.forEach(el => el.classList.add('settings-block__inner-container_dark'));
+}
+
+function changeTheme() {
+  if (theme === 'light') {
+    addDarkTheme();
+    theme = 'dark';
+  } else if (theme === 'dark') {
+    addLightTheme();
+    theme = 'light';
+  }
+}
+
+function correctTheme() {
+  if (theme === 'light') {
+    addLightTheme();
+  } else if (theme === 'dark') {
+    addDarkTheme();
+  }
+}
+
+  

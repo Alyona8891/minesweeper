@@ -17,6 +17,11 @@
   position: absolute;
 }
 
+.window-block_opened-dark {
+  color: $color4;
+  background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
+}
+
 .window-block_closed {
   display: none;
 }
@@ -33,6 +38,12 @@
   flex-direction: column;
   align-items: center;
   text-shadow: 2px 2px 2px black;
+}
+
+.window-block__inner-container_dark {
+  background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
+  width: 190px;
+  color: $color4;
 }
 
 .window-block__subtitle {

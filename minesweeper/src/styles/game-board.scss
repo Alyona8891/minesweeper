@@ -23,11 +23,21 @@
   font-size: 20px;
 }
 
-.game-board__unit_opened {
-    background: $color1;
-    box-shadow: inset rgba(0,0,0,.6) 0 -2px 2px, inset rgba(252,255,255,.7) 0 2px 2px, rgba(0,0,0,.8) 0 2px 2px -1px;
-    border-radius: 0%;
+.game-board__unit_dark {
+  background:  $color5;
 }
+
+
+.game-board__unit_opened {
+  background: $color1;
+  box-shadow: inset rgba(0,0,0,.6) 0 -2px 2px, inset rgb(252,255,255,.7) 0 2px 2px, rgba(0,0,0,.8) 0 2px 2px -1px;
+  border-radius: 0%;
+}
+
+.game-board__unit_opened-dark {
+  background: $color4;
+}
+
 .game-board__unit_opened-null{
  color:rgb(27, 201, 27);
 }
@@ -69,8 +79,17 @@
     border-radius: 0%;
 
 }
+
+.game-board__unit_flagged-dark {
+  background: url(/src/images/flag.svg)  center no-repeat $color4;
+}
+
 .game-board__unit_over {
     background: url(/src/images/mine.svg) center no-repeat $color1;
     border-radius: 0%;
     box-shadow: inset rgba(0,0,0,.6) 0 -2px 2px, inset rgba(252,255,255,.7) 0 2px 2px, rgba(0,0,0,.8) 0 2px 2px -1px;
+}
+
+.game-board__unit_over-dark {
+  background: url(/src/images/mine.svg) center no-repeat $color4;
 }

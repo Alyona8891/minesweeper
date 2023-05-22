@@ -16,6 +16,11 @@
     box-shadow: inset rgba(252,255,255,.7) 0 2px 2px, rgba(0,0,0,.8) 0 2px 2px -1px;
     position: absolute;
   }
+
+  .settings-block_opened-dark {
+    color: $color4;
+    background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
+  }
   
   .settings-block_closed {
     display: none;
@@ -33,6 +38,11 @@
     flex-direction: column;
     align-items: center;
     text-shadow: 2px 2px 2px black;
+  }
+
+  .settings-block__inner-container_dark {
+    background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
+    color: $color4;
   }
   
   .settings-block__subtitle {
