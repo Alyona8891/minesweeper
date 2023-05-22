@@ -98,6 +98,7 @@ function clickUnit() {
   unitClickSound.play();
   let row = parseInt(this.dataset.row);
   let col = parseInt(this.dataset.col);
+  board[row][col].isFlagged = false;
   if(clicksCounter === 0 && board[row][col].isBomb) {
     board = createArrBoard(10, 10, 10);
     clicksCounter = 0;
@@ -123,9 +124,11 @@ function clickUnit() {
     units.forEach(i => i.removeEventListener('contextmenu', clickContextUnit));
     } else {
     if(theme === 'light') {
+      this.classList.remove('game-board__unit_flagged');
       this.classList.add('game-board__unit_opened');
     } else {
       this.classList.add('game-board__unit_opened-dark');
+      this.classList.remove('game-board__unit_flagged');
     }
     this.innerText = board[row][col].bombsAround;
     if(board[row][col].bombsAround === 0) {
@@ -165,6 +168,7 @@ function clickUnit() {
       resultsWindow.classList.toggle('results-block_opened');
       resultsWindow.classList.toggle('results-block_closed');
       innerResultsContainer.innerText = `Hooray! You found all mines in ${timerBlock.innerText} seconds and ${counterClicksEl.innerText} moves!`;
+      writeScoreArr();
       units.forEach(i => i.removeEventListener('click', clickUnit));
       units.forEach(i => i.removeEventListener('contextmenu', clickContextUnit));
     }
@@ -354,9 +358,8 @@ startGameBtn.addEventListener('click', () => {
   }
   counterMines.innerText = inputMines.value;
   clearTimeout(timer);
-  timerBlock.innerHTML = '00:00';
+  timerBlock.innerHTML = '0';
   seconds = 0;
-  minutes = 0;
 })
 /*-------setting-----*/
 createElement('div', mainPage, 'settingsWindow', 'main-page__settings-window', 'settings-block', 'settings-block_closed');
@@ -485,6 +488,11 @@ function addLightTheme() {
   resultsBlockOpened.classList.remove('results-block_opened-dark');
   const resultsBlockInnerContainer = document.querySelectorAll('.results-block__inner-container');
   resultsBlockInnerContainer.forEach(el => el.classList.remove('results-block__inner-container_dark'));
+
+  const scoreBlockOpened = document.querySelector('#scoreWindow');
+  scoreBlockOpened.classList.remove('score-block_opened-dark');
+  const scoreBlockInnerContainer = document.querySelectorAll('.score-block__inner-container');
+  scoreBlockInnerContainer.forEach(el => el.classList.remove('score-block__inner-container_dark'));
 }
 
 function addDarkTheme() {
@@ -518,6 +526,11 @@ function addDarkTheme() {
   resultsBlockOpened.classList.add('results-block_opened-dark');
   const resultsBlockInnerContainer = document.querySelectorAll('.results-block__inner-container');
   resultsBlockInnerContainer.forEach(el => el.classList.add('results-block__inner-container_dark'));
+
+  const scoreBlockOpened = document.querySelector('#scoreWindow');
+  scoreBlockOpened.classList.add('score-block_opened-dark');
+  const scoreBlockInnerContainer = document.querySelectorAll('.score-block__inner-container');
+  scoreBlockInnerContainer.forEach(el => el.classList.add('score-block__inner-container_dark'));
 }
 
 function changeTheme() {
@@ -552,4 +565,72 @@ resultsBlockCloseBtn.addEventListener('click', () => {
   resultsWindow.classList.toggle('results-block_closed');
   vars.body.removeChild(backdrop);
 })
+/*-------score-window-------*/
+
+createElement('div', mainPage, 'scoreWindow', 'main-page__score-window', 'score-block_closed');
+const scoreWindow = document.querySelector('#scoreWindow');
+createElement('h2', scoreWindow, '', 'score-block__subtitle');
+createElement('div', scoreWindow, 'scoreClose', 'score-block__close-btn');
+const scoreSubtitle = document.querySelector('.score-block__subtitle');
+scoreSubtitle.innerText = 'Score';
+nameButtons(['+'], '.score-block__close-btn');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+createElement('div', scoreWindow, '', 'score-block__inner-container');
+
+
+const scoreBlockCloseBtn = document.querySelector('.score-block__close-btn');
+
+scoreBlockCloseBtn.addEventListener('click', () => {
+  scoreWindow.classList.toggle('score-block_opened');
+  scoreWindow.classList.toggle('score-block_closed');
+  vars.body.removeChild(backdrop);
+})
+
+const scoreBtn = document.querySelector('#scoreBtn');
+scoreBtn.addEventListener('click', (e) => {
+  vars.body.append(backdrop);
+  scoreWindow.classList.toggle('score-block_opened');
+  scoreWindow.classList.toggle('score-block_closed');
+  createScoreList();
+});
+
+const scoreArr = [];
+
+function writeScoreArr() {
+  const resultObj = {};
+  resultObj.level = optionsTitle.innerText;
+  resultObj.mines = +(inputMines.value);
+  resultObj.clicks = clicksCounter;
+  resultObj.time = timerBlock.innerText;
   
+  if(scoreArr.length === 10) {
+    scoreArr.pop();
+    scoreArr.reverse();
+    scoreArr.push(resultObj);
+    scoreArr.reverse();
+  } else if (scoreArr.length === 0) {
+    scoreArr.push(resultObj);
+  } else {
+    scoreArr.reverse();
+    scoreArr.push(resultObj);
+    scoreArr.reverse();
+  }
+}
+
+function createScoreList() {
+  const elements = document.querySelectorAll('.score-block__inner-container');
+  for(let i = 0; i < scoreArr.length; i += 1) {
+    elements[i].innerText = `Level: ${scoreArr[i].level}\\Mines: ${scoreArr[i].mines}\\Clicks: ${scoreArr[i].clicks}\\Time: ${scoreArr[i].time}s`;
+  }
+}
+
+
+
