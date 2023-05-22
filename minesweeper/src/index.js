@@ -81,9 +81,13 @@ let clicksCounter = 0;
 let units = document.querySelectorAll('.game-board__unit');
 function createListenersUnits() {
   for (let i = 0; i < units.length; i++) {
+    const btnClickSound = new Audio();
+      btnClickSound.src = './minesweeper/src/sounds/click.mp3';
+      btnClickSound.volume = 0.05;
     const counterClicksEl = document.querySelector('#counterClicks');
     counterClicksEl.innerText =  clicksCounter;
     units[i].addEventListener('click', function() {
+      btnClickSound.play();
       let row = parseInt(this.dataset.row);
       let col = parseInt(this.dataset.col);
       if(clicksCounter === 0 && board[row][col].isBomb) {
@@ -194,7 +198,7 @@ const startGameBtn = document.querySelector('#startGameBtn');
 startGameBtn.innerText = 'Start Game';
 
 const markerEasy = document.querySelector('#easy');
-markerEasy.checked = 'true';
+markerEasy.checked = true;
 inputMines.value = 10;
 /*------button-game-mode----*/
 const gameModeBtn = document.querySelector('#gameModeBtn');
@@ -297,4 +301,60 @@ startGameBtn.addEventListener('click', () => {
     optionsTitle.innerText = 'Hard 25x25';
   }
   counterMines.innerText = inputMines.value;
+})
+/*-------setting-----*/
+createElement('div', mainPage, 'settingsWindow', 'main-page__settings-window', 'settings-block', 'settings-block_closed');
+const settingsWindow = document.querySelector('#settingsWindow');
+createElement('h2', settingsWindow, '', 'settings-block__subtitle');
+
+createElement('div', settingsWindow, 'settingsClose', 'settings-block__close-btn');
+nameButtons(['+'], '.settings-block__close-btn');
+createElement('div', settingsWindow, '', 'settings-block__inner-container');
+const innerSettingsContainer = document.querySelector('.settings-block__inner-container');
+createElement('h2', innerSettingsContainer, '', 'settings-block__subtitle');
+createElement('div', innerSettingsContainer, '', 'settings-block__themes-block', 'themes-block');
+const themesBlock = document.querySelector('.themes-block');
+createElement('button', themesBlock, 'lightTheme', 'themes-block__theme', 'themes-block__theme_chosen');
+createElement('button', themesBlock, 'darkTheme', 'themes-block__theme');
+const themesLightBtn = document.querySelector('#lightTheme');
+createElement('div', themesLightBtn, '', 'themes-block__unit', 'themes-block__unit-light_closen');
+createElement('div', themesLightBtn, '', 'themes-block__unit', 'themes-block__unit-light_opened');
+document.querySelector('.themes-block__unit-light_opened').innerText = '?';
+
+createElement('div', themesLightBtn, '', 'themes-block__unit', 'themes-block__unit-light_flagged');
+createElement('div', themesLightBtn, '', 'themes-block__unit', 'themes-block__unit-light_over');
+const themesDarkBtn = document.querySelector('#darkTheme');
+createElement('div', themesDarkBtn, '', 'themes-block__unit', 'themes-block__unit-dark_closen');
+createElement('div', themesDarkBtn, '', 'themes-block__unit', 'themes-block__unit-dark_opened');
+document.querySelector('.themes-block__unit-dark_opened').innerText = '?';
+createElement('div', themesDarkBtn, '', 'themes-block__unit', 'themes-block__unit-dark_flagged');
+createElement('div', themesDarkBtn, '', 'themes-block__unit', 'themes-block__unit-dark_over');
+
+
+createElement('h2', innerSettingsContainer, '', 'settings-block__subtitle');
+
+innerSettingsContainer.append(createRadioBlock({classNameRadioBlock: 'sound-block', classNameInput: 'sound-block__marker', inputType: 'radio', inputId: 'soundOn', nameInput: 'sound', classLabelBlock: 'sound-block__label', classLabelSubtitle: 'sound-block__subtitle', labelSubtitleText: 'On', classLabelInfo: 'sound-block__info', labelInfoText: ''}));
+innerSettingsContainer.append(createRadioBlock({classNameRadioBlock: 'sound-block', classNameInput: 'sound-block__marker', inputType: 'radio', inputId: 'soundOff', nameInput: 'sound', classLabelBlock: 'sound-block__label', classLabelSubtitle: 'sound-block__subtitle', labelSubtitleText: 'Off', classLabelInfo: 'sound-block__info', labelInfoText: ''}));
+createElement('button', innerSettingsContainer, 'conformBtn', 'settings__button', 'button', 'options__button_purple');
+const markerSoundOn = document.querySelector('#soundOn');
+const markerSoundOf = document.querySelector('#soundOff');
+markerSoundOn.checked = true;
+const conformBtn = document.querySelector('#conformBtn');
+conformBtn.innerText = 'Conform';
+
+nameButtons(['Settings', 'Themes', 'Sound On'], '.settings-block__subtitle');
+
+const settingsBtn = document.querySelector('#settingsBtn');
+settingsBtn.addEventListener('click', (e) => {
+  vars.body.append(backdrop);
+  settingsWindow.classList.toggle('settings-block_opened');
+  settingsWindow.classList.toggle('settings-block_closed');
+});
+
+const settingsCloseBtns = document.querySelector('#settingsClose');
+
+settingsCloseBtns.addEventListener('click', () => {
+  settingsWindow.classList.toggle('settings-block_opened');
+  settingsWindow.classList.toggle('settings-block_closed');
+  vars.body.removeChild(backdrop);
 })
