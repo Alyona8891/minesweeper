@@ -2,12 +2,12 @@ export function openEmptyUnits(theme, board, row, col) {
   if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
     return;
   }
-  if (board[row][col].isOpened || board[row][col].isBomb)
+  if (board[row][col].isOpened || board[row][col].isFlagged || board[row][col].isBomb)
   {
     return;
   }
   board[row][col].isOpened = true;
-  board[row][col].isFlagged = true;
+  
   const units = document.querySelectorAll('.game-board__unit');
   for (let i = 0; i < units.length; i++) {
     let row1 = parseInt(units[i].dataset.row);

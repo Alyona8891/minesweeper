@@ -12,7 +12,7 @@ import { unitClickSound } from './scripts/soundClickUnit';
 import { unitFlagSound } from './scripts/soundContextUnit';
 import { winnerSound } from './scripts/soundWinner';
 import { overSound } from './scripts/soundGameOver';
-//import { startTimer } from './scripts/startTimer';
+
 
 vars.body.classList.add('page');
 createElement('header', vars.body, '', 'page__header-page', 'header-page');
@@ -74,7 +74,7 @@ createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'optio
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_blue', 'button');
 nameButtons(['Game Mode', 'Settings', 'Score', 'Save Game', 'New Game'], '.options__button');
 const timerBlock = document.querySelector('#time');
-timerBlock.innerHTML = '00:00'
+timerBlock.innerHTML = '0';
 
 /*----game-board-----*/
 
@@ -86,123 +86,127 @@ createGameBoard(board, gameBoard);
 
 let clicksCounter = 0;
 let seconds = 0;
-let minutes = 0;
 let timer;
 
 function startTimer() {
   seconds++;
-  if (seconds == 60) {
-    seconds = 0;
-    minutes++;
-  }
-  document.getElementById("time").innerHTML = (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+  document.getElementById("time").innerHTML = seconds;
   timer = setTimeout(startTimer, 1000);
+}
+
+function clickUnit() {
+  unitClickSound.play();
+  let row = parseInt(this.dataset.row);
+  let col = parseInt(this.dataset.col);
+  if(clicksCounter === 0 && board[row][col].isBomb) {
+    board = createArrBoard(10, 10, 10);
+    clicksCounter = 0;
+  } 
+  if(clicksCounter === 0) {
+    startTimer();
+  } 
+  if (board[row][col].isBomb && clicksCounter !== 0) {
+    if(theme === 'light') {
+      this.classList.add('game-board__unit_over');
+    } else {
+      this.classList.add('game-board__unit_over-dark');
+    }
+    clicksCounter += 1;
+    counterClicksEl.innerText =  clicksCounter;
+    overSound.play();
+    vars.body.append(backdrop);
+    resultsWindow.classList.toggle('results-block_opened');
+    resultsWindow.classList.toggle('results-block_closed');
+    innerResultsContainer.innerText = 'Game over. Try again';
+    clearTimer();
+    units.forEach(i => i.removeEventListener('click', clickUnit));
+    units.forEach(i => i.removeEventListener('contextmenu', clickContextUnit));
+    } else {
+    if(theme === 'light') {
+      this.classList.add('game-board__unit_opened');
+    } else {
+      this.classList.add('game-board__unit_opened-dark');
+    }
+    this.innerText = board[row][col].bombsAround;
+    if(board[row][col].bombsAround === 0) {
+      this.classList.add('game-board__unit_opened-null');
+    }
+    if(board[row][col].bombsAround === 1) {
+      this.classList.add('game-board__unit_opened-one');
+    }
+    if(board[row][col].bombsAround === 2) {
+      this.classList.add('game-board__unit_opened-two');
+    }
+    if(board[row][col].bombsAround === 3) {
+      this.classList.add('game-board__unit_opened-three');
+    }
+    if(board[row][col].bombsAround === 4) {
+      this.classList.add('game-board__unit_opened-four');
+    }
+    if(board[row][col].bombsAround === 5) {
+      this.classList.add('game-board__unit_opened-five');
+    }
+    if(board[row][col].bombsAround === 6) {
+      this.classList.add('game-board__unit_opened-six');
+    }
+    if(board[row][col].bombsAround === 7) {
+      this.classList.add('game-board__unit_opened-seven');
+    }
+    if(board[row][col].bombsAround === 8) {
+      this.classList.add('game-board__unit_opened-eight');
+    }
+    clicksCounter += 1;
+    counterClicksEl.innerText =  clicksCounter;
+    openEmptyUnits(theme, board, row, col);
+    if (controlWin(board)) {
+      winnerSound.play();
+      clearTimeout(timer);
+      vars.body.append(backdrop);
+      resultsWindow.classList.toggle('results-block_opened');
+      resultsWindow.classList.toggle('results-block_closed');
+      innerResultsContainer.innerText = `Hooray! You found all mines in ${timerBlock.innerText} seconds and ${counterClicksEl.innerText} moves!`;
+      units.forEach(i => i.removeEventListener('click', clickUnit));
+      units.forEach(i => i.removeEventListener('contextmenu', clickContextUnit));
+    }
+  }
+};
+
+function clickContextUnit(event) {
+  unitFlagSound.play();
+  event.preventDefault();
+  let row = parseInt(this.dataset.row);
+  let col = parseInt(this.dataset.col);
+  if (!board[row][col].isOpened) {
+    board[row][col].isFlagged = !board[row][col].isFlagged;
+    if(board[row][col].isFlagged === true) {
+      counterMines.innerText = +(counterMines.innerText) - 1;
+    } else if (board[row][col].isFlagged === false) {
+      counterMines.innerText = +(counterMines.innerText) + 1;
+    }
+    if(theme === 'light') {
+      this.classList.toggle('game-board__unit_flagged');
+    } else {
+      this.classList.toggle('game-board__unit_flagged-dark');
+    }
+    
+  }
+
 }
 
 function clearTimer() {
   clearTimeout(timer);
 }
 let units = document.querySelectorAll('.game-board__unit');
+
+const counterClicksEl = document.querySelector('#counterClicks');
+counterClicksEl.innerText =  clicksCounter;
+
 function createListenersUnits() {
   
   for (let i = 0; i < units.length; i++) {
-    
-    const counterClicksEl = document.querySelector('#counterClicks');
-    counterClicksEl.innerText =  clicksCounter;
-    units[i].addEventListener('click', function() {
-      unitClickSound.play();
-      let row = parseInt(this.dataset.row);
-      let col = parseInt(this.dataset.col);
-      if(clicksCounter === 0 && board[row][col].isBomb) {
-        board = createArrBoard(10, 10, 10);
-        clicksCounter = 0;
-      } 
-      if(clicksCounter === 0) {
-        startTimer();
-      } 
-      if (board[row][col].isBomb && clicksCounter !== 0) {
-        if(theme === 'light') {
-          this.classList.add('game-board__unit_over');
-        } else {
-          this.classList.add('game-board__unit_over-dark');
-        }
-        clicksCounter += 1;
-        counterClicksEl.innerText =  clicksCounter;
-        overSound.play();
-        clearTimeout(timer);
-      } else {
-        if(theme === 'light') {
-          this.classList.add('game-board__unit_opened');
-        } else {
-          this.classList.add('game-board__unit_opened-dark');
-        }
-        this.innerText = board[row][col].bombsAround;
-        if(board[row][col].bombsAround === 0) {
-          this.classList.add('game-board__unit_opened-null');
-        }
-        if(board[row][col].bombsAround === 1) {
-          this.classList.add('game-board__unit_opened-one');
-        }
-        if(board[row][col].bombsAround === 2) {
-          this.classList.add('game-board__unit_opened-two');
-        }
-        if(board[row][col].bombsAround === 3) {
-          this.classList.add('game-board__unit_opened-three');
-        }
-        if(board[row][col].bombsAround === 4) {
-          this.classList.add('game-board__unit_opened-four');
-        }
-        if(board[row][col].bombsAround === 5) {
-          this.classList.add('game-board__unit_opened-five');
-        }
-        if(board[row][col].bombsAround === 6) {
-          this.classList.add('game-board__unit_opened-six');
-        }
-        if(board[row][col].bombsAround === 7) {
-          this.classList.add('game-board__unit_opened-seven');
-        }
-        if(board[row][col].bombsAround === 8) {
-          this.classList.add('game-board__unit_opened-eight');
-        }
-        clicksCounter += 1;
-        counterClicksEl.innerText =  clicksCounter;
-        openEmptyUnits(theme, board, row, col);
-        if (controlWin(board)) {
-          winnerSound.play();
-          clearTimeout(timer);
-        }
-      }
-    });
-    units[i].addEventListener('contextmenu', function(event) {
-      unitFlagSound.play();
-      event.preventDefault();
-      let row = parseInt(this.dataset.row);
-      let col = parseInt(this.dataset.col);
-      if (!board[row][col].isOpened) {
-        board[row][col].isFlagged = !board[row][col].isFlagged;
-        if(+(counterMines.innerText) > 0 && board[row][col].isFlagged === true) {
-          counterMines.innerText = +(counterMines.innerText) - 1;
-        } else if (+(counterMines.innerText) > 0 && board[row][col].isFlagged === false) {
-          counterMines.innerText = +(counterMines.innerText) + 1;
-        }
-        if (+(counterMines.innerText) === 0) {
-          if (controlWin(board)) {
-            winnerSound.play();
-            clearTimeout(timer);
-          } else {
-            overSound.play();
-            clearTimeout(timer);
-          }
-        }
-        if(theme === 'light') {
-          this.classList.toggle('game-board__unit_flagged');
-        } else {
-          this.classList.toggle('game-board__unit_flagged-dark');
-        }
-        
-      }
-
-    });
+     
+    units[i].addEventListener('click', clickUnit);
+    units[i].addEventListener('contextmenu', clickContextUnit);
   }
 
 }
@@ -477,6 +481,10 @@ function addLightTheme() {
   settingsWindow.classList.remove('settings-block_opened-dark');
   const settingsBlockInnerContainer = document.querySelectorAll('.settings-block__inner-container');
   settingsBlockInnerContainer.forEach(el => el.classList.remove('settings-block__inner-container_dark'));
+  const resultsBlockOpened = document.querySelector('#resultsWindow');
+  resultsBlockOpened.classList.remove('results-block_opened-dark');
+  const resultsBlockInnerContainer = document.querySelectorAll('.results-block__inner-container');
+  resultsBlockInnerContainer.forEach(el => el.classList.remove('results-block__inner-container_dark'));
 }
 
 function addDarkTheme() {
@@ -505,6 +513,11 @@ function addDarkTheme() {
   settingsWindow.classList.add('settings-block_opened-dark');
   const settingsBlockInnerContainer = document.querySelectorAll('.settings-block__inner-container');
   settingsBlockInnerContainer.forEach(el => el.classList.add('settings-block__inner-container_dark'));
+  
+  const resultsBlockOpened = document.querySelector('#resultsWindow');
+  resultsBlockOpened.classList.add('results-block_opened-dark');
+  const resultsBlockInnerContainer = document.querySelectorAll('.results-block__inner-container');
+  resultsBlockInnerContainer.forEach(el => el.classList.add('results-block__inner-container_dark'));
 }
 
 function changeTheme() {
@@ -524,5 +537,19 @@ function correctTheme() {
     addDarkTheme();
   }
 }
+/*----------result-window------*/
+createElement('div', mainPage, 'resultsWindow', 'main-page__results-window', 'options-block', 'results-block_closed');
+const resultsWindow = document.querySelector('#resultsWindow');
+createElement('div', resultsWindow, 'resultsClose', 'results-block__close-btn');
+nameButtons(['+'], '.results-block__close-btn');
+createElement('div', resultsWindow, '', 'results-block__inner-container');
+const innerResultsContainer = document.querySelector('.results-block__inner-container');
 
+const resultsBlockCloseBtn = document.querySelector('.results-block__close-btn');
+
+resultsBlockCloseBtn.addEventListener('click', () => {
+  resultsWindow.classList.toggle('results-block_opened');
+  resultsWindow.classList.toggle('results-block_closed');
+  vars.body.removeChild(backdrop);
+})
   
