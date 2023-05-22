@@ -71,7 +71,7 @@ createElement('button', optionsInfoBlocks, 'gameModeBtn', 'options__button', 'op
 createElement('button', optionsInfoBlocks, 'settingsBtn','options__button', 'options__button_yellow', 'button');
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_purple', 'button');
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_rose', 'button');
-createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_blue', 'button');
+createElement('button', optionsInfoBlocks, 'startNewGameBtn', 'options__button', 'options__button_blue', 'button');
 nameButtons(['Game Mode', 'Settings', 'Score', 'Save Game', 'New Game'], '.options__button');
 const timerBlock = document.querySelector('#time');
 timerBlock.innerHTML = '0';
@@ -98,7 +98,10 @@ function clickUnit() {
   unitClickSound.play();
   let row = parseInt(this.dataset.row);
   let col = parseInt(this.dataset.col);
-  board[row][col].isFlagged = false;
+  if(board[row][col].isFlagged === true) {
+    counterMines.innerText = +(counterMines.innerText) + 1;
+    board[row][col].isFlagged = false;
+  }
   if(clicksCounter === 0 && board[row][col].isBomb) {
     board = createArrBoard(10, 10, 10);
     clicksCounter = 0;
@@ -323,11 +326,7 @@ function checkInputValue() {
 }
 let counterMines = document.querySelector('#counterMines');
 counterMines.innerText = 10;
-startGameBtn.addEventListener('click', () => {
-  gameModeWindow.classList.toggle('window-block_opened');
-  gameModeWindow.classList.toggle('window-block_closed');
-
-  vars.body.removeChild(backdrop);
+function restartGame() {
   if(markerEasy.checked) {
     board = createArrBoard(10, 10, inputMines.value);
     gameBoard.innerHTML = "";
@@ -360,6 +359,13 @@ startGameBtn.addEventListener('click', () => {
   clearTimeout(timer);
   timerBlock.innerHTML = '0';
   seconds = 0;
+  counterClicksEl.innerText =  clicksCounter;
+}
+startGameBtn.addEventListener('click', () => {
+  gameModeWindow.classList.toggle('window-block_opened');
+  gameModeWindow.classList.toggle('window-block_closed');
+  vars.body.removeChild(backdrop);
+  restartGame();
 })
 /*-------setting-----*/
 createElement('div', mainPage, 'settingsWindow', 'main-page__settings-window', 'settings-block', 'settings-block_closed');
@@ -632,5 +638,6 @@ function createScoreList() {
   }
 }
 
-
-
+/*-----btn-start-game----*/
+const startNewGameBtn = document.querySelector('#startNewGameBtn');
+startNewGameBtn.addEventListener('click', restartGame);
