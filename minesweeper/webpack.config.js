@@ -5,7 +5,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js'
+    filename: 'main.js',
   },
   mode: 'development',
   module: {
@@ -19,9 +19,9 @@ module.exports = {
         use: [
           {
             loader: 'html-loader',
-            options: { minimize: true},
-          }
-        ]
+            options: { minimize: true },
+          },
+        ],
       },
       {
         test: /\.s[ac]ss$/i,
@@ -31,24 +31,24 @@ module.exports = {
           'sass-loader',
           {
             loader: 'sass-resources-loader',
-            options: { 
+            options: {
               resources: [
-                'src/styles/vars.scss', 
-              ]
+                'src/styles/vars.scss',
+              ],
             },
-          }
+          },
         ],
-      }
+      },
     ],
   },
   plugins: [
     new HtmlWebPackPlugin({
       template: './src/index.html',
-      filename: './index.html'
-  })
+      filename: './index.html',
+    }),
   ],
   devServer: {
     compress: true,
-    port: 3000
-  }
-}
+    port: 3000,
+  },
+};

@@ -7,14 +7,13 @@ import { createGameBoard } from './scripts/createGameBoard';
 import { openEmptyUnits } from './scripts/openEmptyUnits';
 import { controlWin } from './scripts/controlWin';
 import { createRadioBlock } from './scripts/createRadioBlock';
-
 import { unitClickSound } from './scripts/soundClickUnit';
 import { unitFlagSound } from './scripts/soundContextUnit';
 import { winnerSound } from './scripts/soundWinner';
 import { overSound } from './scripts/soundGameOver';
 
-
 vars.body.classList.add('page');
+
 createElement('header', vars.body, '', 'page__header-page', 'header-page');
 createElement('main', vars.body, '', 'main__main-page', 'main-page');
 createElement('footer', vars.body, '', 'footer__footer-page', 'footer-page');
@@ -28,24 +27,20 @@ headerTitle.innerText = 'MINESWEEPER';
 
 const mainPage = document.querySelector('.main-page');
 createElement('div', mainPage, '', 'main-page__options-window', 'options');
-
-/*--------options-window---------*/
-
+/* --------options-window--------- */
 const optionsBlock = document.querySelector('.options');
 createElement('div', optionsBlock, '', 'options__container');
-
 const optionsContainer = document.querySelector('.options__container');
 createElement('div', optionsContainer, '', 'options__title-block');
 createElement('div', optionsContainer, '', 'options__info-blocks-container');
 const optionsTitleBlock = document.querySelector('.options__title-block');
 createElement('h3', optionsTitleBlock, '', 'options__title');
 const optionsTitle = document.querySelector('.options__title');
-if(localStorage.alyonaOptionsTitle) {
+if (localStorage.alyonaOptionsTitle) {
   optionsTitle.innerText = localStorage.alyonaOptionsTitle;
-} else { 
+} else {
   optionsTitle.innerText = 'Easy 10x10';
 }
-
 
 const optionsInfoBlocks = document.querySelector('.options__info-blocks-container');
 createElement('div', optionsInfoBlocks, '', 'info-block');
@@ -53,57 +48,65 @@ createElement('div', optionsInfoBlocks, '', 'info-block');
 createElement('div', optionsInfoBlocks, '', 'info-block');
 const infoBlocks = document.querySelectorAll('.info-block');
 
-infoBlocks.forEach(el => {
-    const createdElSubtitle = document.createElement('h2');
-    createdElSubtitle.classList.add('info-block__subtitle', 'subtitle')
-    el.append(createdElSubtitle);
-    const createdElCounter = document.createElement('div');
-    createdElCounter.classList.add('info-block__counter', 'counter');
-    el.append(createdElCounter);
-})
+infoBlocks.forEach((el) => {
+  const createdElSubtitle = document.createElement('h2');
+  createdElSubtitle.classList.add('info-block__subtitle', 'subtitle');
+  el.append(createdElSubtitle);
+  const createdElCounter = document.createElement('div');
+  createdElCounter.classList.add('info-block__counter', 'counter');
+  el.append(createdElCounter);
+});
+
 const infoBlockSubtitles = document.querySelectorAll('.info-block__subtitle');
+
 infoBlockSubtitles.forEach((el, i) => {
-  el.innerText = vars.infoBlocksSubtitles[i];
-})
+  const element = el;
+  element.innerText = vars.infoBlocksSubtitles[i];
+});
 
 const infoBlockCounters = document.querySelectorAll('.info-block__counter');
 infoBlockCounters.forEach((el, i) => {
   const arr = ['counterClicks', 'counterMines', 'time'];
-  el.id = arr[i];
-})
+  const element = el;
+  element.id = arr[i];
+});
 
 createElement('button', optionsInfoBlocks, 'gameModeBtn', 'options__button', 'options__button_green', 'button');
-createElement('button', optionsInfoBlocks, 'settingsBtn','options__button', 'options__button_yellow', 'button');
+createElement('button', optionsInfoBlocks, 'settingsBtn', 'options__button', 'options__button_yellow', 'button');
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_purple', 'button');
 createElement('button', optionsInfoBlocks, 'saveGameBtn', 'options__button', 'options__button_rose', 'button');
 createElement('button', optionsInfoBlocks, 'startNewGameBtn', 'options__button', 'options__button_blue', 'button');
 nameButtons(['Game Mode', 'Settings', 'Score', 'Save Game', 'New Game'], '.options__button');
+
 const timerBlock = document.querySelector('#time');
-if(localStorage.alyonaTimerBlock) {
+
+if (localStorage.alyonaTimerBlock) {
   timerBlock.innerHTML = localStorage.alyonaTimerBlock;
 } else {
   timerBlock.innerHTML = '0';
 }
-
-
-/*----game-board-----*/
-
+/* ----game-board----- */
 createElement('div', mainPage, '', 'main-page__game-board', 'game-board');
-const  gameBoard = document.querySelector('.game-board');
+const gameBoard = document.querySelector('.game-board');
 
-let board// = createArrBoard(10, 10, 10);
-
-//createGameBoard(board, gameBoard);
+let board;
 let clicksCounter;
 let units;
-if(localStorage.arrBoard) {
+
+function createListenersUnits() {
+  for (let i = 0; i < units.length; i += 1) {
+    units[i].addEventListener('click', clickUnit);
+    units[i].addEventListener('contextmenu', clickContextUnit);
+  }
+}
+
+if (localStorage.arrBoard) {
   board = JSON.parse(localStorage.arrBoard);
   createGameBoard(board, gameBoard);
-  
-  let arrClassLists = JSON.parse(localStorage.arrClassLists);
-  let arrInnerText = JSON.parse(localStorage.arrInnerText);
+  const arrClassLists = JSON.parse(localStorage.arrClassLists);
+  const arrInnerText = JSON.parse(localStorage.arrInnerText);
   units = document.querySelectorAll('.game-board__unit');
-  for(let i=0; i<units.length; i += 1) {
+  for (let i = 0; i < units.length; i += 1) {
     units[i].classList.value = arrClassLists[i];
     units[i].innerText = arrInnerText[i];
   }
@@ -114,60 +117,59 @@ if(localStorage.arrBoard) {
   units = document.querySelectorAll('.game-board__unit');
   createListenersUnits();
 }
-if(localStorage.alyonaClicksCounter) {
+if (localStorage.alyonaClicksCounter) {
   clicksCounter = +(localStorage.alyonaClicksCounter);
 } else {
   clicksCounter = 0;
 }
 let timer;
 let seconds;
-if(localStorage.alyonaSeconds) {
-  seconds = localStorage.alyonaSeconds;
+if (localStorage.alyonaSeconds) {
+  seconds = +(localStorage.alyonaSeconds);
   startTimer();
 } else {
   seconds = 0;
 }
 
-
 function startTimer() {
-  seconds++;
-  document.getElementById("time").innerHTML = seconds;
+  seconds += 1;
+  document.getElementById('time').innerHTML = seconds;
   timer = setTimeout(startTimer, 1000);
 }
 
 function clickUnit() {
   unitClickSound.play();
-  let row = parseInt(this.dataset.row);
-  let col = parseInt(this.dataset.col);
-  if(board[row][col].isFlagged === true) {
+  const row = parseInt(this.dataset.row, 10);
+  const col = parseInt(this.dataset.col, 10);
+  if (board[row][col].isFlagged === true) {
     counterMines.innerText = +(counterMines.innerText) + 1;
     board[row][col].isFlagged = false;
   }
-  if(clicksCounter === 0 && board[row][col].isBomb) {
+  if (clicksCounter === 0 && board[row][col].isBomb) {
     board = createArrBoard(10, 10, inputMines.value);
     clicksCounter = 0;
-  } 
-  if(clicksCounter === 0) {
+  }
+  if (clicksCounter === 0) {
     startTimer();
-  } 
+  }
   if (board[row][col].isBomb && clicksCounter !== 0) {
-    if(theme === 'light') {
+    if (theme === 'light') {
       this.classList.add('game-board__unit_over');
     } else {
       this.classList.add('game-board__unit_over-dark');
     }
     clicksCounter += 1;
-    counterClicksEl.innerText =  clicksCounter;
+    counterClicksEl.innerText = clicksCounter;
     overSound.play();
     vars.body.append(backdrop);
     resultsWindow.classList.toggle('results-block_opened');
     resultsWindow.classList.toggle('results-block_closed');
     innerResultsContainer.innerText = 'Game over. Try again';
     clearTimer();
-    units.forEach(i => i.removeEventListener('click', clickUnit));
-    units.forEach(i => i.removeEventListener('contextmenu', clickContextUnit));
-    } else {
-    if(theme === 'light') {
+    units.forEach((i) => i.removeEventListener('click', clickUnit));
+    units.forEach((i) => i.removeEventListener('contextmenu', clickContextUnit));
+  } else {
+    if (theme === 'light') {
       this.classList.remove('game-board__unit_flagged');
       this.classList.add('game-board__unit_opened');
     } else {
@@ -175,35 +177,35 @@ function clickUnit() {
       this.classList.remove('game-board__unit_flagged-dark');
     }
     this.innerText = board[row][col].bombsAround;
-    if(board[row][col].bombsAround === 0) {
+    if (board[row][col].bombsAround === 0) {
       this.classList.add('game-board__unit_opened-null');
     }
-    if(board[row][col].bombsAround === 1) {
+    if (board[row][col].bombsAround === 1) {
       this.classList.add('game-board__unit_opened-one');
     }
-    if(board[row][col].bombsAround === 2) {
+    if (board[row][col].bombsAround === 2) {
       this.classList.add('game-board__unit_opened-two');
     }
-    if(board[row][col].bombsAround === 3) {
+    if (board[row][col].bombsAround === 3) {
       this.classList.add('game-board__unit_opened-three');
     }
-    if(board[row][col].bombsAround === 4) {
+    if (board[row][col].bombsAround === 4) {
       this.classList.add('game-board__unit_opened-four');
     }
-    if(board[row][col].bombsAround === 5) {
+    if (board[row][col].bombsAround === 5) {
       this.classList.add('game-board__unit_opened-five');
     }
-    if(board[row][col].bombsAround === 6) {
+    if (board[row][col].bombsAround === 6) {
       this.classList.add('game-board__unit_opened-six');
     }
-    if(board[row][col].bombsAround === 7) {
+    if (board[row][col].bombsAround === 7) {
       this.classList.add('game-board__unit_opened-seven');
     }
-    if(board[row][col].bombsAround === 8) {
+    if (board[row][col].bombsAround === 8) {
       this.classList.add('game-board__unit_opened-eight');
     }
     clicksCounter += 1;
-    counterClicksEl.innerText =  clicksCounter;
+    counterClicksEl.innerText = clicksCounter;
     openEmptyUnits(theme, board, row, col);
     if (controlWin(board)) {
       winnerSound.play();
@@ -214,71 +216,58 @@ function clickUnit() {
       innerResultsContainer.innerText = `Hooray! You found all mines in ${timerBlock.innerText} seconds and ${counterClicksEl.innerText} moves!`;
       writeScoreArr();
       localStorage.alyonaScoreArr = JSON.stringify(scoreArr);
-      units.forEach(i => i.removeEventListener('click', clickUnit));
-      units.forEach(i => i.removeEventListener('contextmenu', clickContextUnit));
+      units.forEach((i) => i.removeEventListener('click', clickUnit));
+      units.forEach((i) => i.removeEventListener('contextmenu', clickContextUnit));
     }
   }
-};
+}
 
 function clickContextUnit(event) {
   unitFlagSound.play();
   event.preventDefault();
-  let row = parseInt(this.dataset.row);
-  let col = parseInt(this.dataset.col);
+  const row = parseInt(this.dataset.row, 10);
+  const col = parseInt(this.dataset.col, 10);
   if (!board[row][col].isOpened) {
     board[row][col].isFlagged = !board[row][col].isFlagged;
-    if(board[row][col].isFlagged === true) {
+    if (board[row][col].isFlagged === true) {
       counterMines.innerText = +(counterMines.innerText) - 1;
     } else if (board[row][col].isFlagged === false) {
       counterMines.innerText = +(counterMines.innerText) + 1;
     }
-    if(theme === 'light') {
+    if (theme === 'light') {
       this.classList.toggle('game-board__unit_flagged');
     } else {
       this.classList.toggle('game-board__unit_flagged-dark');
     }
-    
   }
-
 }
 
 function clearTimer() {
   clearTimeout(timer);
 }
 
-
 const counterClicksEl = document.querySelector('#counterClicks');
-counterClicksEl.innerText =  clicksCounter;
+counterClicksEl.innerText = clicksCounter;
 
-function createListenersUnits() {
-  
-  for (let i = 0; i < units.length; i++) {
-     
-    units[i].addEventListener('click', clickUnit);
-    units[i].addEventListener('contextmenu', clickContextUnit);
-  }
+/* ---------game-mode-window--------- */
 
-}
-
-
-
-
-
-/*---------game-mode-window---------*/
 createElement('div', mainPage, 'gameModeWindow', 'main-page__game-mode-window', 'window-block_closed');
 const gameModeWindow = document.querySelector('#gameModeWindow');
 createElement('h2', gameModeWindow, '', 'window-block__subtitle');
 nameButtons(['Game Mode'], '.window-block__subtitle');
-
 createElement('div', gameModeWindow, 'gameModeClose', 'window-block__close-btn');
 nameButtons(['+'], '.window-block__close-btn');
-
 createElement('div', gameModeWindow, '', 'window-block__inner-container');
-
 const innerContainer = document.querySelector('.window-block__inner-container');
-innerContainer.append(createRadioBlock({classNameRadioBlock: 'input-block', classNameInput:'input-block__marker' , inputType: 'radio', inputId: 'easy', nameInput: 'level', classLabelBlock: 'input-block__label', classLabelSubtitle: 'input-block__subtitle', labelSubtitleText: 'Easy', classLabelInfo: 'input-block__info', labelInfoText: '10x10'}));
-innerContainer.append(createRadioBlock({classNameRadioBlock: 'input-block', classNameInput:'input-block__marker' , inputType: 'radio', inputId: 'medium', nameInput: 'level', classLabelBlock: 'input-block__label', classLabelSubtitle: 'input-block__subtitle', labelSubtitleText: 'Medium', classLabelInfo: 'input-block__info', labelInfoText: '16x16'}));
-innerContainer.append(createRadioBlock({classNameRadioBlock: 'input-block', classNameInput:'input-block__marker' , inputType: 'radio', inputId: 'hard', nameInput: 'level', classLabelBlock: 'input-block__label', classLabelSubtitle: 'input-block__subtitle', labelSubtitleText: 'Hard', classLabelInfo: 'input-block__info', labelInfoText: '25x25'}));
+innerContainer.append(createRadioBlock({
+  classNameRadioBlock: 'input-block', classNameInput: 'input-block__marker', inputType: 'radio', inputId: 'easy', nameInput: 'level', classLabelBlock: 'input-block__label', classLabelSubtitle: 'input-block__subtitle', labelSubtitleText: 'Easy', classLabelInfo: 'input-block__info', labelInfoText: '10x10',
+}));
+innerContainer.append(createRadioBlock({
+  classNameRadioBlock: 'input-block', classNameInput: 'input-block__marker', inputType: 'radio', inputId: 'medium', nameInput: 'level', classLabelBlock: 'input-block__label', classLabelSubtitle: 'input-block__subtitle', labelSubtitleText: 'Medium', classLabelInfo: 'input-block__info', labelInfoText: '16x16',
+}));
+innerContainer.append(createRadioBlock({
+  classNameRadioBlock: 'input-block', classNameInput: 'input-block__marker', inputType: 'radio', inputId: 'hard', nameInput: 'level', classLabelBlock: 'input-block__label', classLabelSubtitle: 'input-block__subtitle', labelSubtitleText: 'Hard', classLabelInfo: 'input-block__info', labelInfoText: '25x25',
+}));
 const errorBlock = document.createElement('div');
 errorBlock.classList.add('window-block__error-block');
 const inputTextBlock = document.createElement('div');
@@ -303,20 +292,22 @@ const markerEasy = document.querySelector('#easy');
 const markerMedium = document.querySelector('#medium');
 const markerHard = document.querySelector('#hard');
 
-if(localStorage.alyonaMarkerEasy || localStorage.alyonaMarkerMedium || localStorage.alyonaMarkerHard) {
-  if(localStorage.alyonaMarkerEasy === 'true') {
+if (localStorage.alyonaMarkerEasy
+  || localStorage.alyonaMarkerMedium
+  || localStorage.alyonaMarkerHard) {
+  if (localStorage.alyonaMarkerEasy === 'true') {
     markerEasy.checked = true;
-   } else {
+  } else {
     markerEasy.checked = false;
   }
-  if(localStorage.alyonaMarkerMedium === 'true') {
+  if (localStorage.alyonaMarkerMedium === 'true') {
     markerMedium.checked = true;
-   } else {
+  } else {
     markerMedium.checked = false;
   }
-  if(localStorage.alyonaMarkerHard === 'true') {
+  if (localStorage.alyonaMarkerHard === 'true') {
     markerHard.checked = true;
-   } else {
+  } else {
     markerHard.checked = false;
   }
 } else {
@@ -325,17 +316,16 @@ if(localStorage.alyonaMarkerEasy || localStorage.alyonaMarkerMedium || localStor
   markerHard.checked = false;
 }
 
-if(localStorage.alyonaInputMines) {
+if (localStorage.alyonaInputMines) {
   inputMines.value = +(localStorage.alyonaInputMines);
 } else {
   inputMines.value = 10;
 }
-
-/*------button-game-mode----*/
+/* ------button-game-mode---- */
 const gameModeBtn = document.querySelector('#gameModeBtn');
 const backdrop = document.createElement('div');
 backdrop.classList.add('backdrop');
-gameModeBtn.addEventListener('click', (e) => {
+gameModeBtn.addEventListener('click', () => {
   vars.body.append(backdrop);
   gameModeWindow.classList.toggle('window-block_opened');
   gameModeWindow.classList.toggle('window-block_closed');
@@ -344,16 +334,13 @@ gameModeWindow.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-
-
 markerMedium.addEventListener('input', () => {
- 
   markerEasy.checked = false;
   markerHard.checked = false;
   markerMedium.checked = true;
   inputMines.value = 10;
   checkInputValue();
-})
+});
 
 markerEasy.addEventListener('input', () => {
   markerMedium.checked = false;
@@ -361,7 +348,7 @@ markerEasy.addEventListener('input', () => {
   markerEasy.checked = true;
   inputMines.value = 10;
   checkInputValue();
-})
+});
 
 markerHard.addEventListener('input', () => {
   markerEasy.checked = false;
@@ -369,28 +356,28 @@ markerHard.addEventListener('input', () => {
   markerHard.checked = true;
   inputMines.value = 10;
   checkInputValue();
-})
+});
 
 const closeBtns = document.querySelector('#gameModeClose');
 
 closeBtns.addEventListener('click', () => {
   errorBlock.innerHTML = '';
-  if(markerEasy.checked) {
+  if (markerEasy.checked) {
     inputMines.value = 10;
-  } else if(markerMedium.checked) {
+  } else if (markerMedium.checked) {
     inputMines.value = 25;
-  } else if(markerHard.checked) {
+  } else if (markerHard.checked) {
     inputMines.value = 30;
   }
   gameModeWindow.classList.toggle('window-block_opened');
   gameModeWindow.classList.toggle('window-block_closed');
   vars.body.removeChild(backdrop);
-})
+});
 
 inputMines.addEventListener('input', checkInputValue);
 
 function checkInputValue() {
-  if(inputMines.value < 10 || inputMines.value > 99 || !(+(inputMines.value))) {
+  if (inputMines.value < 10 || inputMines.value > 99 || !(+(inputMines.value))) {
     errorBlock.innerText = 'Error! The number of mines can be from 10 to 99!';
     startGameBtn.disabled = true;
   } else if (inputMines.value >= 10 && inputMines.value <= 99) {
@@ -399,34 +386,34 @@ function checkInputValue() {
   }
 }
 let counterMines = document.querySelector('#counterMines');
-if(localStorage.alyonaCounterMines) {
+if (localStorage.alyonaCounterMines) {
   counterMines.innerText = localStorage.alyonaCounterMines;
 } else {
   counterMines.innerText = 10;
 }
 
 function restartGame() {
-  if(markerEasy.checked) {
+  if (markerEasy.checked) {
     board = createArrBoard(10, 10, inputMines.value);
-    gameBoard.innerHTML = "";
+    gameBoard.innerHTML = '';
     createGameBoard(board, gameBoard);
     clicksCounter = 0;
     units = document.querySelectorAll('.game-board__unit');
     createListenersUnits();
     correctTheme();
     optionsTitle.innerText = 'Easy 10x10';
-  } else if(markerMedium.checked) {
+  } else if (markerMedium.checked) {
     board = createArrBoard(16, 16, inputMines.value);
-    gameBoard.innerHTML = "";
+    gameBoard.innerHTML = '';
     createGameBoard(board, gameBoard);
     units = document.querySelectorAll('.game-board__unit');
     clicksCounter = 0;
     createListenersUnits();
     correctTheme();
     optionsTitle.innerText = 'Medium 16x16';
-  } else if(markerHard.checked) {
+  } else if (markerHard.checked) {
     board = createArrBoard(25, 25, inputMines.value);
-    gameBoard.innerHTML = "";
+    gameBoard.innerHTML = '';
     createGameBoard(board, gameBoard);
     units = document.querySelectorAll('.game-board__unit');
     clicksCounter = 0;
@@ -438,15 +425,16 @@ function restartGame() {
   clearTimeout(timer);
   timerBlock.innerHTML = '0';
   seconds = 0;
-  counterClicksEl.innerText =  clicksCounter;
+  counterClicksEl.innerText = clicksCounter;
+  saveGameBtn.disabled = false;
 }
 startGameBtn.addEventListener('click', () => {
   gameModeWindow.classList.toggle('window-block_opened');
   gameModeWindow.classList.toggle('window-block_closed');
   vars.body.removeChild(backdrop);
   restartGame();
-})
-/*-------setting-----*/
+});
+/* -------setting----- */
 createElement('div', mainPage, 'settingsWindow', 'main-page__settings-window', 'settings-block', 'settings-block_closed');
 const settingsWindow = document.querySelector('#settingsWindow');
 createElement('h2', settingsWindow, '', 'settings-block__subtitle');
@@ -473,18 +461,19 @@ createElement('div', themesDarkBtn, '', 'themes-block__unit', 'themes-block__uni
 document.querySelector('.themes-block__unit-dark_opened').innerText = '?';
 createElement('div', themesDarkBtn, '', 'themes-block__unit', 'themes-block__unit-dark_flagged');
 createElement('div', themesDarkBtn, '', 'themes-block__unit', 'themes-block__unit-dark_over');
-
-
 createElement('h2', innerSettingsContainer, '', 'settings-block__subtitle');
-
-innerSettingsContainer.append(createRadioBlock({classNameRadioBlock: 'sound-block', classNameInput: 'sound-block__marker', inputType: 'radio', inputId: 'soundOn', nameInput: 'sound', classLabelBlock: 'sound-block__label', classLabelSubtitle: 'sound-block__subtitle', labelSubtitleText: 'On', classLabelInfo: 'sound-block__info', labelInfoText: ''}));
-innerSettingsContainer.append(createRadioBlock({classNameRadioBlock: 'sound-block', classNameInput: 'sound-block__marker', inputType: 'radio', inputId: 'soundOff', nameInput: 'sound', classLabelBlock: 'sound-block__label', classLabelSubtitle: 'sound-block__subtitle', labelSubtitleText: 'Off', classLabelInfo: 'sound-block__info', labelInfoText: ''}));
+innerSettingsContainer.append(createRadioBlock({
+  classNameRadioBlock: 'sound-block', classNameInput: 'sound-block__marker', inputType: 'radio', inputId: 'soundOn', nameInput: 'sound', classLabelBlock: 'sound-block__label', classLabelSubtitle: 'sound-block__subtitle', labelSubtitleText: 'On', classLabelInfo: 'sound-block__info', labelInfoText: '',
+}));
+innerSettingsContainer.append(createRadioBlock({
+  classNameRadioBlock: 'sound-block', classNameInput: 'sound-block__marker', inputType: 'radio', inputId: 'soundOff', nameInput: 'sound', classLabelBlock: 'sound-block__label', classLabelSubtitle: 'sound-block__subtitle', labelSubtitleText: 'Off', classLabelInfo: 'sound-block__info', labelInfoText: '',
+}));
 createElement('button', innerSettingsContainer, 'conformBtn', 'settings__button', 'button', 'options__button_purple');
 const markerSoundOn = document.querySelector('#soundOn');
 const markerSoundOff = document.querySelector('#soundOff');
 
-if(localStorage.alyonaSoundOn || localStorage.alyonaSoundOff) {
-  if(localStorage.alyonaSoundOn === 'true') {
+if (localStorage.alyonaSoundOn || localStorage.alyonaSoundOff) {
+  if (localStorage.alyonaSoundOn === 'true') {
     markerSoundOn.checked = true;
     unitClickSound.volume = 0.5;
     unitFlagSound.volume = 0.5;
@@ -493,7 +482,7 @@ if(localStorage.alyonaSoundOn || localStorage.alyonaSoundOff) {
   } else {
     markerSoundOn.checked = false;
   }
-  if(localStorage.alyonaSoundOff === 'true') {
+  if (localStorage.alyonaSoundOff === 'true') {
     markerSoundOff.checked = true;
     unitClickSound.volume = 0;
     unitFlagSound.volume = 0;
@@ -509,7 +498,7 @@ if(localStorage.alyonaSoundOn || localStorage.alyonaSoundOff) {
 nameButtons(['Settings', 'Themes', 'Sound'], '.settings-block__subtitle');
 
 const settingsBtn = document.querySelector('#settingsBtn');
-settingsBtn.addEventListener('click', (e) => {
+settingsBtn.addEventListener('click', () => {
   vars.body.append(backdrop);
   settingsWindow.classList.toggle('settings-block_opened');
   settingsWindow.classList.toggle('settings-block_closed');
@@ -521,7 +510,7 @@ settingsCloseBtns.addEventListener('click', () => {
   settingsWindow.classList.toggle('settings-block_opened');
   settingsWindow.classList.toggle('settings-block_closed');
   vars.body.removeChild(backdrop);
-})
+});
 
 const conformBtn = document.querySelector('#conformBtn');
 conformBtn.innerText = 'Conform';
@@ -530,7 +519,7 @@ conformBtn.addEventListener('click', () => {
   settingsWindow.classList.toggle('settings-block_opened');
   settingsWindow.classList.toggle('settings-block_closed');
   vars.body.removeChild(backdrop);
-  if(soundOn.checked === true) {
+  if (markerSoundOn.checked === true) {
     unitClickSound.volume = 0.5;
     unitFlagSound.volume = 0.5;
     winnerSound.volume = 0.5;
@@ -541,41 +530,36 @@ conformBtn.addEventListener('click', () => {
     winnerSound.volume = 0;
     overSound.volume = 0;
   }
-  if(themesLightBtn.classList.contains('themes-block__theme_chosen')) {
+  if (themesLightBtn.classList.contains('themes-block__theme_chosen')) {
     theme = 'light';
     addLightTheme();
   } else if (themesDarkBtn.classList.contains('themes-block__theme_chosen')) {
     theme = 'dark';
     addDarkTheme();
   }
-})
+});
 
-soundOn.addEventListener('input', () => {
-  soundOff.checked = false;
-  soundOn.checked = true;
-})
+markerSoundOn.addEventListener('input', () => {
+  markerSoundOff.checked = false;
+  markerSoundOn.checked = true;
+});
 
-soundOff.addEventListener('input', () => {
-  soundOff.checked = true;
-  soundOn.checked = false;
-})
+markerSoundOff.addEventListener('input', () => {
+  markerSoundOff.checked = true;
+  markerSoundOn.checked = false;
+});
 
 let theme;
-
-
-
 
 themesLightBtn.addEventListener('click', () => {
   themesDarkBtn.classList.remove('themes-block__theme_chosen');
   themesLightBtn.classList.add('themes-block__theme_chosen');
- 
 });
 
 themesDarkBtn.addEventListener('click', () => {
   themesLightBtn.classList.remove('themes-block__theme_chosen');
   themesDarkBtn.classList.add('themes-block__theme_chosen');
-  
-})
+});
 
 function addLightTheme() {
   const buttons = document.querySelectorAll('.button');
@@ -658,16 +642,6 @@ function addDarkTheme() {
   scoreBlockInnerContainer.forEach(el => el.classList.add('score-block__inner-container_dark'));
 }
 
-function changeTheme() {
-  if (theme === 'light') {
-    addDarkTheme();
-    theme = 'dark';
-  } else if (theme === 'dark') {
-    addLightTheme();
-    theme = 'light';
-  }
-}
-
 function correctTheme() {
   if (theme === 'light') {
     addLightTheme();
@@ -675,7 +649,7 @@ function correctTheme() {
     addDarkTheme();
   }
 }
-/*----------result-window------*/
+/* ----------result-window------ */
 createElement('div', mainPage, 'resultsWindow', 'main-page__results-window', 'options-block', 'results-block_closed');
 const resultsWindow = document.querySelector('#resultsWindow');
 createElement('div', resultsWindow, 'resultsClose', 'results-block__close-btn');
@@ -689,8 +663,9 @@ resultsBlockCloseBtn.addEventListener('click', () => {
   resultsWindow.classList.toggle('results-block_opened');
   resultsWindow.classList.toggle('results-block_closed');
   vars.body.removeChild(backdrop);
-})
-/*-------score-window-------*/
+  saveGameBtn.disabled = true;
+});
+/* -------score-window------- */
 
 createElement('div', mainPage, 'scoreWindow', 'main-page__score-window', 'score-block_closed');
 const scoreWindow = document.querySelector('#scoreWindow');
@@ -710,17 +685,16 @@ createElement('div', scoreWindow, '', 'score-block__inner-container');
 createElement('div', scoreWindow, '', 'score-block__inner-container');
 createElement('div', scoreWindow, '', 'score-block__inner-container');
 
-
 const scoreBlockCloseBtn = document.querySelector('.score-block__close-btn');
 
 scoreBlockCloseBtn.addEventListener('click', () => {
   scoreWindow.classList.toggle('score-block_opened');
   scoreWindow.classList.toggle('score-block_closed');
   vars.body.removeChild(backdrop);
-})
+});
 
 const scoreBtn = document.querySelector('#scoreBtn');
-scoreBtn.addEventListener('click', (e) => {
+scoreBtn.addEventListener('click', () => {
   vars.body.append(backdrop);
   scoreWindow.classList.toggle('score-block_opened');
   scoreWindow.classList.toggle('score-block_closed');
@@ -728,10 +702,9 @@ scoreBtn.addEventListener('click', (e) => {
 });
 
 let scoreArr = [];
-if(localStorage.alyonaScoreArr) {
+if (localStorage.alyonaScoreArr) {
   scoreArr = JSON.parse(localStorage.alyonaScoreArr);
 }
-
 
 function writeScoreArr() {
   const resultObj = {};
@@ -739,8 +712,7 @@ function writeScoreArr() {
   resultObj.mines = +(inputMines.value);
   resultObj.clicks = clicksCounter;
   resultObj.time = timerBlock.innerText;
-  
-  if(scoreArr.length === 10) {
+  if (scoreArr.length === 10) {
     scoreArr.pop();
     scoreArr.reverse();
     scoreArr.push(resultObj);
@@ -756,14 +728,14 @@ function writeScoreArr() {
 
 function createScoreList() {
   const elements = document.querySelectorAll('.score-block__inner-container');
-  for(let i = 0; i < scoreArr.length; i += 1) {
+  for (let i = 0; i < scoreArr.length; i += 1) {
     elements[i].innerText = `Level: ${scoreArr[i].level}\\Mines: ${scoreArr[i].mines}\\Clicks: ${scoreArr[i].clicks}\\Time: ${scoreArr[i].time}s`;
   }
 }
 
-if(localStorage.alyonaTheme) {
+if (localStorage.alyonaTheme) {
   theme = localStorage.alyonaTheme;
-  if(theme  === 'light') {
+  if (theme === 'light') {
     themesLightBtn.classList.add('themes-block__theme_chosen');
     themesDarkBtn.classList.remove('themes-block__theme_chosen');
     addLightTheme();
@@ -773,43 +745,41 @@ if(localStorage.alyonaTheme) {
     addDarkTheme();
   }
 } else {
-  theme  = 'light';
+  theme = 'light';
   themesLightBtn.classList.add('themes-block__theme_chosen');
   themesDarkBtn.classList.remove('themes-block__theme_chosen');
 }
 
-
-/*-----btn-start-game----*/
+/* -----btn-start-game---- */
 const startNewGameBtn = document.querySelector('#startNewGameBtn');
 startNewGameBtn.addEventListener('click', restartGame);
 
-/*------local-storage-----*/
+/* ------local-storage----- */
 const arrClassLists = [];
 const arrInnerText = [];
 const saveGameBtn = document.querySelector('#saveGameBtn');
 saveGameBtn.addEventListener('click', () => {
   localStorage.arrBoard = JSON.stringify(board);
-  for(let i=0; i<units.length; i += 1) {
-  arrClassLists.push(units[i].classList.value);
-  arrInnerText.push(units[i].innerText)
-}
-localStorage.arrClassLists = JSON.stringify(arrClassLists);
-localStorage.arrInnerText = JSON.stringify(arrInnerText);
-localStorage.alyonaOptionsTitle = optionsTitle.innerText;
-localStorage.alyonaTimerBlock = timerBlock.innerHTML;
-localStorage.alyonaClicksCounter = clicksCounter;
-localStorage.alyonaSeconds = seconds;
-localStorage.alyonaCounterMines = counterMines.innerText;
-localStorage.alyonaMarkerEasy = markerEasy.checked;
-localStorage.alyonaMarkerMedium = markerMedium.checked;
-localStorage.alyonaMarkerHard = markerHard.checked;
-localStorage.alyonaTheme = theme;
-localStorage.alyonaSoundOn = markerSoundOn.checked;
-localStorage.alyonaSoundOff = markerSoundOff.checked;
-localStorage.alyonaInputMines = inputMines.value;
+  for (let i = 0; i < units.length; i += 1) {
+    arrClassLists.push(units[i].classList.value);
+    arrInnerText.push(units[i].innerText);
+  }
+  localStorage.arrClassLists = JSON.stringify(arrClassLists);
+  localStorage.arrInnerText = JSON.stringify(arrInnerText);
+  localStorage.alyonaOptionsTitle = optionsTitle.innerText;
+  localStorage.alyonaTimerBlock = timerBlock.innerHTML;
+  localStorage.alyonaClicksCounter = clicksCounter;
+  localStorage.alyonaSeconds = seconds;
+  localStorage.alyonaCounterMines = counterMines.innerText;
+  localStorage.alyonaMarkerEasy = markerEasy.checked;
+  localStorage.alyonaMarkerMedium = markerMedium.checked;
+  localStorage.alyonaMarkerHard = markerHard.checked;
+  localStorage.alyonaTheme = theme;
+  localStorage.alyonaSoundOn = markerSoundOn.checked;
+  localStorage.alyonaSoundOff = markerSoundOff.checked;
+  localStorage.alyonaInputMines = inputMines.value;
+  vars.body.append(backdrop);
+  resultsWindow.classList.toggle('results-block_opened');
+  resultsWindow.classList.toggle('results-block_closed');
+  innerResultsContainer.innerText = 'Game saved! The next time you open the game, you will see this version. Get ready, the timer is about to start!';
 });
-
-
-
-
-
