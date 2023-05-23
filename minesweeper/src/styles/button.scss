@@ -17,6 +17,11 @@
     scale: 1.05;
     transition: 0.3s;
    }
+   @media screen and (max-width: 860px) {
+    height: 20px;
+    width: 70px;
+    font-size: 12px;
+}
 }
 .button_dark {
     color: $color4;

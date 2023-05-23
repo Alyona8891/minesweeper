@@ -13,7 +13,7 @@ import { unitFlagSound } from './scripts/soundContextUnit';
 import { winnerSound } from './scripts/soundWinner';
 import { overSound } from './scripts/soundGameOver';
 
-
+alert('Если есть такая возможность, то хотела бы попросить Вас отложить проверку моей работы до 24 мая. Чуть-чуть мне осталось, чтобы закончить. Спасибо!');
 vars.body.classList.add('page');
 createElement('header', vars.body, '', 'page__header-page', 'header-page');
 createElement('main', vars.body, '', 'main__main-page', 'main-page');
