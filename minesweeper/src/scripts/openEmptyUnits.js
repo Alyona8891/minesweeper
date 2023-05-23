@@ -8,7 +8,7 @@ export function openEmptyUnits(theme, board, row, col) {
   }
   board[row][col].isOpened = true;
   
-  const units = document.querySelectorAll('.game-board__unit');
+  let units = document.querySelectorAll('.game-board__unit');
   for (let i = 0; i < units.length; i++) {
     let row1 = parseInt(units[i].dataset.row);
     let col1 = parseInt(units[i].dataset.col);

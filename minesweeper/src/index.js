@@ -40,7 +40,12 @@ createElement('div', optionsContainer, '', 'options__info-blocks-container');
 const optionsTitleBlock = document.querySelector('.options__title-block');
 createElement('h3', optionsTitleBlock, '', 'options__title');
 const optionsTitle = document.querySelector('.options__title');
-optionsTitle.innerText = 'Easy 10x10';
+if(localStorage.alyonaOptionsTitle) {
+  optionsTitle.innerText = localStorage.alyonaOptionsTitle;
+} else { 
+  optionsTitle.innerText = 'Easy 10x10';
+}
+
 
 const optionsInfoBlocks = document.querySelector('.options__info-blocks-container');
 createElement('div', optionsInfoBlocks, '', 'info-block');
@@ -70,23 +75,59 @@ infoBlockCounters.forEach((el, i) => {
 createElement('button', optionsInfoBlocks, 'gameModeBtn', 'options__button', 'options__button_green', 'button');
 createElement('button', optionsInfoBlocks, 'settingsBtn','options__button', 'options__button_yellow', 'button');
 createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_purple', 'button');
-createElement('button', optionsInfoBlocks, 'scoreBtn', 'options__button', 'options__button_rose', 'button');
+createElement('button', optionsInfoBlocks, 'saveGameBtn', 'options__button', 'options__button_rose', 'button');
 createElement('button', optionsInfoBlocks, 'startNewGameBtn', 'options__button', 'options__button_blue', 'button');
 nameButtons(['Game Mode', 'Settings', 'Score', 'Save Game', 'New Game'], '.options__button');
 const timerBlock = document.querySelector('#time');
-timerBlock.innerHTML = '0';
+if(localStorage.alyonaTimerBlock) {
+  timerBlock.innerHTML = localStorage.alyonaTimerBlock;
+} else {
+  timerBlock.innerHTML = '0';
+}
+
 
 /*----game-board-----*/
 
 createElement('div', mainPage, '', 'main-page__game-board', 'game-board');
 const  gameBoard = document.querySelector('.game-board');
 
-let board = createArrBoard(10, 10, 10);
-createGameBoard(board, gameBoard);
+let board// = createArrBoard(10, 10, 10);
 
-let clicksCounter = 0;
-let seconds = 0;
+//createGameBoard(board, gameBoard);
+let clicksCounter;
+let units;
+if(localStorage.arrBoard) {
+  board = JSON.parse(localStorage.arrBoard);
+  createGameBoard(board, gameBoard);
+  
+  let arrClassLists = JSON.parse(localStorage.arrClassLists);
+  let arrInnerText = JSON.parse(localStorage.arrInnerText);
+  units = document.querySelectorAll('.game-board__unit');
+  for(let i=0; i<units.length; i += 1) {
+    units[i].classList.value = arrClassLists[i];
+    units[i].innerText = arrInnerText[i];
+  }
+  createListenersUnits();
+} else {
+  board = createArrBoard(10, 10, 10);
+  createGameBoard(board, gameBoard);
+  units = document.querySelectorAll('.game-board__unit');
+  createListenersUnits();
+}
+if(localStorage.alyonaClicksCounter) {
+  clicksCounter = localStorage.alyonaClicksCounter;
+} else {
+  clicksCounter = 0;
+}
 let timer;
+let seconds;
+if(localStorage.alyonaSeconds) {
+  seconds = localStorage.alyonaSeconds;
+  startTimer();
+} else {
+  seconds = 0;
+}
+
 
 function startTimer() {
   seconds++;
@@ -203,7 +244,7 @@ function clickContextUnit(event) {
 function clearTimer() {
   clearTimeout(timer);
 }
-let units = document.querySelectorAll('.game-board__unit');
+
 
 const counterClicksEl = document.querySelector('#counterClicks');
 counterClicksEl.innerText =  clicksCounter;
@@ -217,7 +258,11 @@ function createListenersUnits() {
   }
 
 }
-createListenersUnits();
+
+
+
+
+
 /*---------game-mode-window---------*/
 createElement('div', mainPage, 'gameModeWindow', 'main-page__game-mode-window', 'window-block_closed');
 const gameModeWindow = document.querySelector('#gameModeWindow');
@@ -254,7 +299,19 @@ const startGameBtn = document.querySelector('#startGameBtn');
 startGameBtn.innerText = 'Start Game';
 
 const markerEasy = document.querySelector('#easy');
-markerEasy.checked = true;
+const markerMedium = document.querySelector('#medium');
+const markerHard = document.querySelector('#hard');
+
+if(localStorage.alyonaMarkerEasy || localStorage.alyonaMarkerMedium || localStorage.alyonaMarkerHard) {
+  markerEasy.checked = localStorage.alyonaMarkerEasy;
+  markerMedium.checked = localStorage.alyonaMarkerMedium;
+  markerHard.checked = localStorage.alyonaMarkerHard;
+} else {
+  markerEasy.checked = true;
+  markerMedium.checked = false;
+  markerHard.checked = false;
+}
+
 inputMines.value = 10;
 /*------button-game-mode----*/
 const gameModeBtn = document.querySelector('#gameModeBtn');
@@ -269,8 +326,7 @@ gameModeWindow.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-const markerMedium = document.querySelector('#medium');
-const markerHard = document.querySelector('#hard');
+
 
 markerMedium.addEventListener('input', () => {
  
@@ -325,7 +381,12 @@ function checkInputValue() {
   }
 }
 let counterMines = document.querySelector('#counterMines');
-counterMines.innerText = 10;
+if(localStorage.alyonaCounterMines) {
+  counterMines.innerText = localStorage.alyonaCounterMines;
+} else {
+  counterMines.innerText = 10;
+}
+
 function restartGame() {
   if(markerEasy.checked) {
     board = createArrBoard(10, 10, inputMines.value);
@@ -641,3 +702,30 @@ function createScoreList() {
 /*-----btn-start-game----*/
 const startNewGameBtn = document.querySelector('#startNewGameBtn');
 startNewGameBtn.addEventListener('click', restartGame);
+
+/*------local-storage-----*/
+const arrClassLists = [];
+const arrInnerText = [];
+const saveGameBtn = document.querySelector('#saveGameBtn');
+saveGameBtn.addEventListener('click', () => {
+  localStorage.arrBoard = JSON.stringify(board);
+  for(let i=0; i<units.length; i += 1) {
+  arrClassLists.push(units[i].classList.value);
+  arrInnerText.push(units[i].innerText)
+}
+localStorage.arrClassLists = JSON.stringify(arrClassLists);
+localStorage.arrInnerText = JSON.stringify(arrInnerText);
+localStorage.alyonaOptionsTitle = optionsTitle.innerText;
+localStorage.alyonaTimerBlock = timerBlock.innerHTML;
+localStorage.alyonaClicksCounter = clicksCounter;
+localStorage.alyonaSeconds = seconds;
+localStorage.alyonaCounterMines = counterMines.innerText;
+localStorage.alyonaMarkerEasy = markerEasy.checked;
+localStorage.alyonaMarkerMedium = markerMedium.checked;
+localStorage.alyonaMarkerHard = markerHard.checked;
+});
+
+
+
+
+
