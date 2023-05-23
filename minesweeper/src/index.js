@@ -13,7 +13,7 @@ import { unitFlagSound } from './scripts/soundContextUnit';
 import { winnerSound } from './scripts/soundWinner';
 import { overSound } from './scripts/soundGameOver';
 
-alert('Если есть такая возможность, то хотела бы попросить Вас отложить проверку моей работы до 24 мая. Чуть-чуть мне осталось, чтобы закончить. Спасибо!');
+
 vars.body.classList.add('page');
 createElement('header', vars.body, '', 'page__header-page', 'header-page');
 createElement('main', vars.body, '', 'main__main-page', 'main-page');
@@ -115,7 +115,7 @@ if(localStorage.arrBoard) {
   createListenersUnits();
 }
 if(localStorage.alyonaClicksCounter) {
-  clicksCounter = localStorage.alyonaClicksCounter;
+  clicksCounter = +(localStorage.alyonaClicksCounter);
 } else {
   clicksCounter = 0;
 }
@@ -144,7 +144,7 @@ function clickUnit() {
     board[row][col].isFlagged = false;
   }
   if(clicksCounter === 0 && board[row][col].isBomb) {
-    board = createArrBoard(10, 10, 10);
+    board = createArrBoard(10, 10, inputMines.value);
     clicksCounter = 0;
   } 
   if(clicksCounter === 0) {
@@ -172,7 +172,7 @@ function clickUnit() {
       this.classList.add('game-board__unit_opened');
     } else {
       this.classList.add('game-board__unit_opened-dark');
-      this.classList.remove('game-board__unit_flagged');
+      this.classList.remove('game-board__unit_flagged-dark');
     }
     this.innerText = board[row][col].bombsAround;
     if(board[row][col].bombsAround === 0) {
@@ -304,16 +304,33 @@ const markerMedium = document.querySelector('#medium');
 const markerHard = document.querySelector('#hard');
 
 if(localStorage.alyonaMarkerEasy || localStorage.alyonaMarkerMedium || localStorage.alyonaMarkerHard) {
-  markerEasy.checked = localStorage.alyonaMarkerEasy;
-  markerMedium.checked = localStorage.alyonaMarkerMedium;
-  markerHard.checked = localStorage.alyonaMarkerHard;
+  if(localStorage.alyonaMarkerEasy === 'true') {
+    markerEasy.checked = true;
+   } else {
+    markerEasy.checked = false;
+  }
+  if(localStorage.alyonaMarkerMedium === 'true') {
+    markerMedium.checked = true;
+   } else {
+    markerMedium.checked = false;
+  }
+  if(localStorage.alyonaMarkerHard === 'true') {
+    markerHard.checked = true;
+   } else {
+    markerHard.checked = false;
+  }
 } else {
   markerEasy.checked = true;
   markerMedium.checked = false;
   markerHard.checked = false;
 }
 
-inputMines.value = 10;
+if(localStorage.alyonaInputMines) {
+  inputMines.value = +(localStorage.alyonaInputMines);
+} else {
+  inputMines.value = 10;
+}
+
 /*------button-game-mode----*/
 const gameModeBtn = document.querySelector('#gameModeBtn');
 const backdrop = document.createElement('div');
@@ -334,7 +351,7 @@ markerMedium.addEventListener('input', () => {
   markerEasy.checked = false;
   markerHard.checked = false;
   markerMedium.checked = true;
-  inputMines.value = 25;
+  inputMines.value = 10;
   checkInputValue();
 })
 
@@ -350,7 +367,7 @@ markerHard.addEventListener('input', () => {
   markerEasy.checked = false;
   markerMedium.checked = false;
   markerHard.checked = true;
-  inputMines.value = 80;
+  inputMines.value = 10;
   checkInputValue();
 })
 
@@ -441,7 +458,7 @@ const innerSettingsContainer = document.querySelector('.settings-block__inner-co
 createElement('h2', innerSettingsContainer, '', 'settings-block__subtitle');
 createElement('div', innerSettingsContainer, '', 'settings-block__themes-block', 'themes-block');
 const themesBlock = document.querySelector('.themes-block');
-createElement('button', themesBlock, 'lightTheme', 'themes-block__theme', 'themes-block__theme_chosen');
+createElement('button', themesBlock, 'lightTheme', 'themes-block__theme');
 createElement('button', themesBlock, 'darkTheme', 'themes-block__theme');
 const themesLightBtn = document.querySelector('#lightTheme');
 createElement('div', themesLightBtn, '', 'themes-block__unit', 'themes-block__unit-light_closen');
@@ -464,9 +481,30 @@ innerSettingsContainer.append(createRadioBlock({classNameRadioBlock: 'sound-bloc
 innerSettingsContainer.append(createRadioBlock({classNameRadioBlock: 'sound-block', classNameInput: 'sound-block__marker', inputType: 'radio', inputId: 'soundOff', nameInput: 'sound', classLabelBlock: 'sound-block__label', classLabelSubtitle: 'sound-block__subtitle', labelSubtitleText: 'Off', classLabelInfo: 'sound-block__info', labelInfoText: ''}));
 createElement('button', innerSettingsContainer, 'conformBtn', 'settings__button', 'button', 'options__button_purple');
 const markerSoundOn = document.querySelector('#soundOn');
-const markerSoundOf = document.querySelector('#soundOff');
-markerSoundOn.checked = true;
+const markerSoundOff = document.querySelector('#soundOff');
 
+if(localStorage.alyonaSoundOn || localStorage.alyonaSoundOff) {
+  if(localStorage.alyonaSoundOn === 'true') {
+    markerSoundOn.checked = true;
+    unitClickSound.volume = 0.5;
+    unitFlagSound.volume = 0.5;
+    winnerSound.volume = 0.5;
+    overSound.volume = 0.5;
+  } else {
+    markerSoundOn.checked = false;
+  }
+  if(localStorage.alyonaSoundOff === 'true') {
+    markerSoundOff.checked = true;
+    unitClickSound.volume = 0;
+    unitFlagSound.volume = 0;
+    winnerSound.volume = 0;
+    overSound.volume = 0;
+  } else {
+    markerSoundOff.checked = false;
+  }
+} else {
+  markerSoundOn.checked = true;
+}
 
 nameButtons(['Settings', 'Themes', 'Sound'], '.settings-block__subtitle');
 
@@ -503,7 +541,13 @@ conformBtn.addEventListener('click', () => {
     winnerSound.volume = 0;
     overSound.volume = 0;
   }
-  changeTheme();
+  if(themesLightBtn.classList.contains('themes-block__theme_chosen')) {
+    theme = 'light';
+    addLightTheme();
+  } else if (themesDarkBtn.classList.contains('themes-block__theme_chosen')) {
+    theme = 'dark';
+    addDarkTheme();
+  }
 })
 
 soundOn.addEventListener('input', () => {
@@ -516,26 +560,36 @@ soundOff.addEventListener('input', () => {
   soundOn.checked = false;
 })
 
-let theme = 'light';
+let theme;
+
+
+
+
 themesLightBtn.addEventListener('click', () => {
   themesDarkBtn.classList.remove('themes-block__theme_chosen');
   themesLightBtn.classList.add('themes-block__theme_chosen');
+ 
 });
 
 themesDarkBtn.addEventListener('click', () => {
   themesLightBtn.classList.remove('themes-block__theme_chosen');
   themesDarkBtn.classList.add('themes-block__theme_chosen');
+  
 })
+
 function addLightTheme() {
   const buttons = document.querySelectorAll('.button');
   buttons.forEach(el => el.classList.remove('button_dark'));
   const gameBoardUnits = document.querySelectorAll('.game-board__unit');
   gameBoardUnits.forEach(el => el.classList.remove('game-board__unit_dark'));
-  const gameBoardUnitsOpend = document.querySelectorAll('.game-board__unit_opened');
+  const gameBoardUnitsOpend = document.querySelectorAll('.game-board__unit_opened-dark');
+  gameBoardUnitsOpend.forEach(el => el.classList.add('game-board__unit_opened'));
   gameBoardUnitsOpend.forEach(el => el.classList.remove('game-board__unit_opened-dark'));
-  const gameBoardUnitsFlagged = document.querySelectorAll('.game-board__unit_flagged');
+  const gameBoardUnitsFlagged = document.querySelectorAll('.game-board__unit_flagged-dark');
+  gameBoardUnitsFlagged.forEach(el => el.classList.add('game-board__unit_flagged'));
   gameBoardUnitsFlagged.forEach(el => el.classList.remove('game-board__unit_flagged-dark'));
-  const gameBoardUnitsOver = document.querySelectorAll('.game-board__unit_over');
+  const gameBoardUnitsOver = document.querySelectorAll('.game-board__unit_over-dark');
+  gameBoardUnitsOver.forEach(el => el.classList.add('game-board__unit_over'));
   gameBoardUnitsOver.forEach(el => el.classList.remove('game-board__unit_over-dark'));
   vars.body.classList.remove('page_dark');
   const optionsTitleBlock = document.querySelectorAll('.options__title-block');
@@ -570,10 +624,13 @@ function addDarkTheme() {
   gameBoardUnits.forEach(el => el.classList.add('game-board__unit_dark'));
   const gameBoardUnitsOpend = document.querySelectorAll('.game-board__unit_opened');
   gameBoardUnitsOpend.forEach(el => el.classList.add('game-board__unit_opened-dark'));
+  gameBoardUnitsOpend.forEach(el => el.classList.remove('game-board__unit_opened'));
   const gameBoardUnitsFlagged = document.querySelectorAll('.game-board__unit_flagged');
   gameBoardUnitsFlagged.forEach(el => el.classList.add('game-board__unit_flagged-dark'));
+  gameBoardUnitsFlagged.forEach(el => el.classList.remove('game-board__unit_flagged'));
   const gameBoardUnitsOver = document.querySelectorAll('.game-board__unit_over');
   gameBoardUnitsOver.forEach(el => el.classList.add('game-board__unit_over-dark'));
+  gameBoardUnitsOver.forEach(el => el.classList.remove('game-board__unit_over'));
   vars.body.classList.add('page_dark');
   const optionsTitleBlock = document.querySelectorAll('.options__title-block');
   optionsTitleBlock.forEach(el => el.classList.add('options__title-block_dark'));
@@ -704,6 +761,24 @@ function createScoreList() {
   }
 }
 
+if(localStorage.alyonaTheme) {
+  theme = localStorage.alyonaTheme;
+  if(theme  === 'light') {
+    themesLightBtn.classList.add('themes-block__theme_chosen');
+    themesDarkBtn.classList.remove('themes-block__theme_chosen');
+    addLightTheme();
+  } else {
+    themesLightBtn.classList.remove('themes-block__theme_chosen');
+    themesDarkBtn.classList.add('themes-block__theme_chosen');
+    addDarkTheme();
+  }
+} else {
+  theme  = 'light';
+  themesLightBtn.classList.add('themes-block__theme_chosen');
+  themesDarkBtn.classList.remove('themes-block__theme_chosen');
+}
+
+
 /*-----btn-start-game----*/
 const startNewGameBtn = document.querySelector('#startNewGameBtn');
 startNewGameBtn.addEventListener('click', restartGame);
@@ -728,7 +803,10 @@ localStorage.alyonaCounterMines = counterMines.innerText;
 localStorage.alyonaMarkerEasy = markerEasy.checked;
 localStorage.alyonaMarkerMedium = markerMedium.checked;
 localStorage.alyonaMarkerHard = markerHard.checked;
-//localStorage.alyonaScoreArr = JSON.stringify(scoreArr);
+localStorage.alyonaTheme = theme;
+localStorage.alyonaSoundOn = markerSoundOn.checked;
+localStorage.alyonaSoundOff = markerSoundOff.checked;
+localStorage.alyonaInputMines = inputMines.value;
 });
 
 

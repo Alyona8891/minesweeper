@@ -1,77 +1,84 @@
 @import '/src/styles/vars.scss';
 
 .themes-block {
-    padding: 5px;
-    width: 100%;
-    border-radius: 5px;
-    background: linear-gradient(180deg,  $color3 10%, $color2 80%, $color3); 
-    box-shadow: inset 2px 2px 5px rgba(154, 147, 140, 0.5), 1px 1px 5px rgba(255, 255, 255, 1);
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  border-radius: 5px;
+  background: linear-gradient(180deg,  $color3 10%, $color2 80%, $color3); 
+  box-shadow: inset 2px 2px 5px rgba(154, 147, 140, 0.5), 1px 1px 5px rgba(255, 255, 255, 1);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .themes-block__theme {
-    display: flex;
-    width: 64px;
-    cursor: pointer;
-    flex-wrap: wrap;
-    border: azure 2px solid;
+  display: flex;
+  width: 64px;
+  cursor: pointer;
+  flex-wrap: wrap;
+  border: azure 2px solid;
 }
+
 .themes-block__theme_chosen {
-    border: yellow 2px solid;
+  border: yellow 2px solid;
 }
 
 .themes-block__unit{
-    width: 30px;
-    height: 30px;
-    outline: none;
-    border: none;
-    flex: 0 0 50%;
-    border-radius: 10%;
-    box-shadow: inset 2px 2px 5px rgba(154, 147, 140, 0.5), 1px 1px 5px rgb(255, 255, 255);
+  width: 30px;
+  height: 30px;
+  outline: none;
+  border: none;
+  flex: 0 0 50%;
+  border-radius: 10%;
+  box-shadow: inset 2px 2px 5px rgba(154, 147, 140, 0.5), 1px 1px 5px rgb(255, 255, 255);
 }
+
 .themes-block__unit-light_closen {
-    background:  rgb(30, 204, 204) radial-gradient(150% 100% at 50% 5px, rgba(255,255,255,.2), rgba(0,0,0,0));
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  background:  rgb(30, 204, 204) radial-gradient(150% 100% at 50% 5px, rgba(255,255,255,.2), rgba(0,0,0,0));
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
 }
+
 .themes-block__unit-light_opened {
-    color: yellow;
-    font-size: 27px;
-    background:azure;
-    text-shadow: 2px 2px 2px black;
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  color: yellow;
+  font-size: 27px;
+  background:azure;
+  text-shadow: 2px 2px 2px black;
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
 }
 
 .themes-block__unit-light_flagged {
-    background: url(/src/images/flag.svg)  center no-repeat azure;
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
-    border-radius: 0%;
+  background: url(/src/images/flag.svg)  center no-repeat azure;
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  border-radius: 0%;
 }
+
 .themes-block__unit-light_over {
-    background: url(/src/images/mine.svg)  center no-repeat azure;
-    border-radius: 0%;
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  background: url(/src/images/mine.svg)  center no-repeat azure;
+  border-radius: 0%;
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
 }
+
 .themes-block__unit-dark_closen {
-    background:  rgb(96, 117, 117) radial-gradient(150% 100% at 50% 5px, rgba(255,255,255,.2), rgba(0,0,0,0));
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  background:  rgb(96, 117, 117) radial-gradient(150% 100% at 50% 5px, rgba(255,255,255,.2), rgba(0,0,0,0));
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
 }
+
 .themes-block__unit-dark_opened {
-    color: yellow;
-    font-size: 27px;
-    background:rgb(186, 199, 199);
-    text-shadow: 2px 2px 2px black;
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  color: yellow;
+  font-size: 27px;
+  background:rgb(186, 199, 199);
+  text-shadow: 2px 2px 2px black;
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
 }
 
 .themes-block__unit-dark_flagged {
-    background: url(/src/images/flag.svg)  center no-repeat rgb(186, 199, 199);
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
-    border-radius: 0%;
+  background: url(/src/images/flag.svg)  center no-repeat rgb(186, 199, 199);
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  border-radius: 0%;
 }
+
 .themes-block__unit-dark_over {
-    background: url(/src/images/mine.svg)  center no-repeat rgb(186, 199, 199);
-    border-radius: 0%;
-    box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
+  background: url(/src/images/mine.svg)  center no-repeat rgb(186, 199, 199);
+  border-radius: 0%;
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -2px 2px, inset rgba(252, 255, 255, 0.7) 0 2px 2px, rgba(0, 0, 0, 0.8) 0 2px 2px -1px;
 }

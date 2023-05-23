@@ -1,65 +1,65 @@
 @import '/src/styles/vars.scss';
 
 .settings-block_opened {
-    z-index: 15;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    font-size: 20px;
-    border-radius: 5px 5px 5px 5px;
-    padding: 15px 0 10px 0;
-    width: 210px;
-    color: $color1;
-    text-shadow: 2px 2px 2px black;
-    background: linear-gradient(120deg,  $color2 10%, $color1 80%, $color2); 
-    box-shadow: inset rgba(252,255,255,.7) 0 2px 2px, rgba(0,0,0,.8) 0 2px 2px -1px;
-    position: absolute;
-  }
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 20px;
+  border-radius: 5px 5px 5px 5px;
+  padding: 15px 0 10px 0;
+  width: 210px;
+  color: $color1;
+  text-shadow: 2px 2px 2px black;
+  background: linear-gradient(120deg,  $color2 10%, $color1 80%, $color2); 
+  box-shadow: inset rgba(252,255,255,.7) 0 2px 2px, rgba(0,0,0,.8) 0 2px 2px -1px;
+  position: absolute;
+}
 
-  .settings-block_opened-dark {
-    color: $color4;
-    background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
-  }
-  
-  .settings-block_closed {
-    display: none;
-  }
-  
-  .settings-block__inner-container {
-    background: linear-gradient(120deg,  $color2 10%, $color1 80%, $color2); 
-    width: 190px;
-    box-shadow: inset 2px 2px 5px rgba(154, 147, 140, 0.5), 1px 1px 5px $color1;
-    border-radius: 5px;
-    justify-content: center;
-    color: $color1;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-shadow: 2px 2px 2px black;
-  }
+.settings-block_opened-dark {
+  color: $color4;
+  background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
+}
 
-  .settings-block__inner-container_dark {
-    background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
-    color: $color4;
-  }
-  
-  .settings-block__subtitle {
-    margin-bottom: 10px;
-  }
-  
-  .settings-block__close-btn {
-   position: absolute;
-   top: 5px;
-   right: 10px;
-   color: $color3;
-   text-shadow: none;
-   rotate: 45deg;
-   font-size: 30px;
-   cursor: pointer;
-  }
+.settings-block_closed {
+  display: none;
+}
 
-.settings__button {
+.settings-block__inner-container {
+  background: linear-gradient(120deg,  $color2 10%, $color1 80%, $color2); 
+  width: 190px;
+  box-shadow: inset 2px 2px 5px rgba(154, 147, 140, 0.5), 1px 1px 5px $color1;
+  border-radius: 5px;
+  justify-content: center;
+  color: $color1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 2px 2px 2px black;
+}
+
+.settings-block__inner-container_dark {
+  background: linear-gradient(120deg,  $color5 10%, $color4 80%, $color5); 
+  color: $color4;
+}
+
+.settings-block__subtitle {
+  margin-bottom: 10px;
+}
+
+.settings-block__close-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  color: $color3;
+  text-shadow: none;
+  rotate: 45deg;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+settings__button {
   margin: 10px 0;
 }

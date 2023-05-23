@@ -15,10 +15,6 @@
   background: linear-gradient(120deg,  $color2 10%, $color1 80%, $color2); 
   box-shadow: inset rgba(252,255,255,.7) 0 2px 2px, rgba(0,0,0,.8) 0 2px 2px -1px;
   position: absolute;
-  @media screen and (max-width: 860px) {
-    font-size: 14px;
-    width: 150px;
-    }
 }
 
 .window-block_opened-dark {
@@ -55,12 +51,12 @@
 }
 
 .window-block__close-btn {
- position: absolute;
- top: 5px;
- right: 10px;
- color: $color3;
- text-shadow: none;
- rotate: 45deg;
- font-size: 30px;
- cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  color: $color3;
+  text-shadow: none;
+  rotate: 45deg;
+  font-size: 30px;
+  cursor: pointer;
 }
