@@ -213,6 +213,7 @@ function clickUnit() {
       resultsWindow.classList.toggle('results-block_closed');
       innerResultsContainer.innerText = `Hooray! You found all mines in ${timerBlock.innerText} seconds and ${counterClicksEl.innerText} moves!`;
       writeScoreArr();
+      localStorage.alyonaScoreArr = JSON.stringify(scoreArr);
       units.forEach(i => i.removeEventListener('click', clickUnit));
       units.forEach(i => i.removeEventListener('contextmenu', clickContextUnit));
     }
@@ -669,7 +670,11 @@ scoreBtn.addEventListener('click', (e) => {
   createScoreList();
 });
 
-const scoreArr = [];
+let scoreArr = [];
+if(localStorage.alyonaScoreArr) {
+  scoreArr = JSON.parse(localStorage.alyonaScoreArr);
+}
+
 
 function writeScoreArr() {
   const resultObj = {};
@@ -723,6 +728,7 @@ localStorage.alyonaCounterMines = counterMines.innerText;
 localStorage.alyonaMarkerEasy = markerEasy.checked;
 localStorage.alyonaMarkerMedium = markerMedium.checked;
 localStorage.alyonaMarkerHard = markerHard.checked;
+//localStorage.alyonaScoreArr = JSON.stringify(scoreArr);
 });
 
 
