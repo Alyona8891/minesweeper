@@ -36,9 +36,14 @@ You are to implement a classic game — [Minesweeper](<https://en.wikipedia.org/
 Recommended usage of [eslint (eslint-config-airbnb-base)](https://eslint.org/), [webpack](https://webpack.js.org/) (this requirement is not checked)
 
 ## Technology Stack
+
  - HTML
  - JavaScript
  - SCSS
  - Webpack
+ - Eslint
    
 ## Deploy
+
+https://alyona8891.github.io/minesweeper/minesweeper/
+
